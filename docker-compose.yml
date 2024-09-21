@@ -1,0 +1,15 @@
+version: 22.7.0    # node version for running the application
+
+services:  
+   client:       # create a service name 
+       build: .   # create a build docker file 
+       container_name: react_app   # create a container name
+      
+       ports: 
+           - 3000:3000    #expose port 
+       environment: 
+           - REACT_APP_API_URL=http://localhost:8000
+       volumes:
+           - .:/app    #Mount current directory to /app in the container
+
+              
