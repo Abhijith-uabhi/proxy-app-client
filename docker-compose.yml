@@ -11,5 +11,6 @@ services:
            - REACT_APP_API_URL=http://localhost:8000
        volumes:
            - .:/app    #Mount current directory to /app in the container
+           - /app/node_modules  # Keep node_modules in the container
 
               

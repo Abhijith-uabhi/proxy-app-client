@@ -70,7 +70,6 @@ console.log(location);
       history.push("/admin/your/tasks")
     }
   };
-  console.log("THe intial value is", initialValues);
 
   return (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
