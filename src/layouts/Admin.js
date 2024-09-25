@@ -5,7 +5,7 @@ import Footer from 'components/Footer/Footer.js';
 // Layout components
 import AdminNavbar from 'components/Navbars/AdminNavbar.js';
 import Sidebar from 'components/Sidebar';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import routes from 'routes';
 import dashRoutes from 'config/navigationConfig';
@@ -21,6 +21,7 @@ import PanelContainer from '../components/Layout/PanelContainer';
 import PanelContent from '../components/Layout/PanelContent';
 import { AUTH_TOKEN } from 'config/authConfig';
 import SignIn from 'views/Auth/SignIn';
+import { socket } from 'connection/socket';
 
 
 
@@ -88,7 +89,7 @@ export default function Dashboard(props) {
 				if (token) {
 					return <Route path={prop.layout + prop.path} component={prop.component} key={key} />;
 				} else {
-					return   <Redirect from={`/`} to="/auth/signin" />
+					return <Redirect from={`/`} to="/auth/signin" />
 
 				}
 			} else {
@@ -99,6 +100,23 @@ export default function Dashboard(props) {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	document.documentElement.dir = 'ltr';
 	// Chakra Color Mode
+
+	useEffect(() => {
+
+		// Listen to the "task_notification" event and get the data
+		socket.on("task_notification", (data) => {
+			console.log("THE TASK NOTIFICATION RECEIVED:", data.message);
+			alert(data.message)
+			// You can also trigger a pop-up or notification here using the message
+		});
+
+		// Cleanup to avoid adding multiple listeners
+		return () => {
+			socket.off("task_notification");
+		};
+	}, []);
+
+
 	return (
 		<ChakraProvider theme={theme} resetCss={false}>
 			<Sidebar

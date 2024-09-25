@@ -39,7 +39,7 @@ const Tasks = ({ title, captions, listType }) => {
     const fetchTasks = async (type) => {
         try {
             const response = await taskService.getall(type)
-            console.log("THE RESPONSE DATA",response.data);
+            // console.log("THE RESPONSE DATA",response.data);
             
             setTasks(response.data)
         } catch (error) {

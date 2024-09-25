@@ -1,4 +1,7 @@
+import { socket } from "connection/socket"
 import api from "./fetchInterceptor"
+
+
 
 const taskService = {}
 
@@ -14,11 +17,10 @@ taskService.getall = (type) => {
     )
 
 }
-
 taskService.createTask=(data)=>{
     return (
         api({
-            url:`${basePath}/create`,
+            url:`${basePath}/create?sid=${socket.id}`,
             method:"post",
             data
         })

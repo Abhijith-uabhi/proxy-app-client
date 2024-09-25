@@ -22,7 +22,6 @@ import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
 import AuthLayout from "layouts/Auth.js";
 import AdminLayout from "layouts/Admin.js";
 import RTLLayout from "layouts/RTL.js";
-import { socket } from "connection/socket";
 
 
 
