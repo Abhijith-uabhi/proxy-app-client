@@ -11,6 +11,7 @@ import {
     Tr,
     useColorModeValue,
 } from "@chakra-ui/react";
+import CustomAlert from "components/Alerts/Alert";
 // Custom components
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
@@ -25,6 +26,8 @@ const Tasks = ({ title, captions, listType }) => {
     const textColor = useColorModeValue("gray.700", "white");
     const history = useHistory()
     const [tasks, setTasks] = useState([])
+    const [alert, setAlert] = useState({ show: false, status: '', description: '' });
+
 
     useEffect(() => {
         if (listType)
@@ -40,7 +43,6 @@ const Tasks = ({ title, captions, listType }) => {
         try {
             const response = await taskService.getall(type)
             // console.log("THE RESPONSE DATA",response.data);
-            
             setTasks(response.data)
         } catch (error) {
             console.log("Error fetching the  tasks", error);
@@ -50,9 +52,14 @@ const Tasks = ({ title, captions, listType }) => {
 
     const handleDeleteTask = async (task_id) => {
         try {
-            console.log((task_id));
             const res = await taskService.deleteTask(task_id)
-            if (res) fetchTasks(listType)
+            if (res) {
+                fetchTasks(listType)
+                setAlert({ show: true, status: 'success', description: 'Task deleted successfully' })
+            }
+            setTimeout(() => {
+                setAlert({ show: false });
+            }, 2000);
             return res
 
         } catch (error) {
@@ -62,14 +69,26 @@ const Tasks = ({ title, captions, listType }) => {
     }
 
 
-    const handleEditTask = async (values, id) => {
+    const handleEditTask = async (values, id, type) => {
         try {
-            console.log(values);
-            history.push({
-                pathname: "/admin/edit/tasks",
-                state: { taskData: values, task_id: id }  // Passing data as state
-            });
+            if (type === "assign") {
+                await taskService.updateTask(id, values, type)
+                await fetchTasks("all_tasks")
+                setAlert({ show: true, status: 'success', description: 'Task assigned successfully' });
+            } else {
+                history.push({
+                    pathname: "/admin/edit/tasks",
+                    state: { taskData: values, task_id: id }  // Passing data as state
+                });
+            }
+            setTimeout(() => {
+                setAlert({ show: false });
+            }, 2000);
         } catch (error) {
+            if(type==="assign"){
+                setAlert({ show: true, status: 'error', description: 'Error assigned task' });
+
+            }
             console.log("Error editing a task", error);
 
         }
@@ -77,6 +96,8 @@ const Tasks = ({ title, captions, listType }) => {
 
     return (
         <Card overflowX={{ sm: "scroll", xl: "hidden" }}>
+            {alert.show && <CustomAlert status={alert.status} description={alert.description} />}
+
             <CardHeader>
                 <Flex justify="space-between" align='center' mb='1rem' w='100%'>
                     <Text fontSize='xl' color={textColor} fontWeight='bold'>

@@ -9,6 +9,8 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react";
+import CustomAlert from "components/Alerts/Alert";
+import Card from "components/Card/Card";
 import ConfirmModal from "components/Modals/confirmModal";
 import dayjs from "dayjs";
 import React, { useState } from "react";
@@ -18,13 +20,14 @@ import taskService from "services/taksService";
 
 
 function TaskRow(props) {
-  const { title, description, priority, due_date, listType, task_id, updateTask, deleteTask,fetchTasks } = props;
+  const { title, description, priority, due_date, listType, task_id, updateTask, deleteTask, fetchTasks } = props;
   const textColor = useColorModeValue("gray.700", "white");
   const bgStatus = useColorModeValue("gray.400", "#1a202c");
   const colorStatus = useColorModeValue("white", "gray.400");
   const history = useHistory()
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const [modalDescription, setModalDescription] = useState("")
+  const [alert, setAlert] = useState({ show: false, status: '', description: '' });
 
 
   const handleOk = async () => {
@@ -32,13 +35,24 @@ function TaskRow(props) {
       if (listType === "user_tasks") {
         console.log((task_id));
         await deleteTask(task_id)
+
       } else {
-        await taskService.updateTask(task_id, { volunteer_id: "" }, "assign")
-        await fetchTasks("all_tasks")
+        await updateTask({ volunteer_id: "" }, task_id, "assign")
+
       }
       setShowConfirmModal(false)
+
     } catch (error) {
-      console.log("error in the hanleok function", error);
+      console.log("error in the handleok function", error);
+      if (listType === "user_tasks") {
+        setAlert({ show: true, status: 'error', description: 'Failed to delete the task' });
+
+      } else {
+        setAlert({ show: true, status: 'error', description: 'Failed to assign the task' });
+
+      }
+
+
 
     }
   }

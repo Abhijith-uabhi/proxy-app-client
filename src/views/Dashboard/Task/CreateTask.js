@@ -6,6 +6,7 @@ import Card from 'components/Card/Card';
 import taskService from 'services/taksService';
 import dayjs from 'dayjs';
 import { useHistory, useLocation } from 'react-router-dom/cjs/react-router-dom.min';
+import CustomAlert from 'components/Alerts/Alert';
 
 // Validation schema using Yup
 const validationSchemaStep1 = Yup.object().shape({
@@ -28,9 +29,7 @@ const TaskForm = () => {
     due_date: '',
   })
   const location = useLocation()
-
-console.log(location);
-
+  const [alert, setAlert] = useState({ show: false, status: '', description: '' });
 
   useEffect(() => {
     if (location.state) {
@@ -53,27 +52,44 @@ console.log(location);
   };
 
   const handleSubmit = async (values) => {
+    try {
+      const formatedDate = dayjs(values.due_date).format('YYYY-MM-DDTHH:mm:ss');
+      values.due_date = formatedDate
 
-    const formatedDate = dayjs(values.due_date).format('YYYY-MM-DDTHH:mm:ss');
-    values.due_date = formatedDate
-    let response
-    if (location.state) {
-      const task_id = location.state.task_id
-      response = await taskService.updateTask(task_id,values,null)
-    }
-    else {
-     
-      response = await taskService.createTask(values)
+      if (location.state) {
+        const task_id = location.state.task_id
+        const response = await taskService.updateTask(task_id, values, null)
+        if (response) {
+          setAlert({ show: true, status: 'success', description: 'Task updated successfully' });
+
+        }
+      }
+      else {
+        const response = await taskService.createTask(values)
+        if (response) {
+          setAlert({ show: true, status: 'success', description: 'Task created successfully' });
+
+        }
+      }
+
+      setTimeout(() => {
+        setAlert({ show: false });
+        history.push('/admin/your/tasks');
+      }, 1000);
+
+
+    } catch (error) {
+      setAlert({ show: true, status: 'error', description: 'Failed to create task' });
+
     }
 
-    if (response) {
-      history.push("/admin/your/tasks")
-    }
   };
 
   return (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
       <Card>
+        {alert.show && <CustomAlert status={alert.status} description={alert.description} />}
+
         <Formik
           initialValues={initialValues}
           enableReinitialize={true}

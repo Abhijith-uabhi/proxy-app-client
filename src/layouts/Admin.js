@@ -103,6 +103,10 @@ export default function Dashboard(props) {
 
 	useEffect(() => {
 
+		socket.on("a_new_event",()=>{
+			console.log("HELLO WORLD");
+			
+		})
 		// Listen to the "task_notification" event and get the data
 		socket.on("task_notification", (data) => {
 			console.log("THE TASK NOTIFICATION RECEIVED:", data.message);
