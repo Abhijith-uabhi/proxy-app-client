@@ -152,7 +152,11 @@ const TaskForm = () => {
 
                   <FormControl isInvalid={errors.due_date && touched.due_date}>
                     <FormLabel>Due Date</FormLabel>
-                    <Field as={Input} name="due_date" placeholder="Enter Due Date" type="date" />
+                    <Field
+                      as={Input}
+                      name="due_date"
+                      placeholder="Enter Due Date"
+                      type="date" min={new Date().toISOString().split("T")[0]} />
                     <Text color="red.500">
                       <ErrorMessage name="due_date" />
                     </Text>

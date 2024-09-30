@@ -17,7 +17,7 @@ import {
   SupportIcon,
 } from "components/Icons/Icons";
 import TaskPage from "views/Dashboard/Task";
-import TaskForm from "views/Dashboard/Task/CreateTask";
+import TaskForm from "views/Dashboard/Task/components/CreateTask";
 
 var dashRoutes = [
   {
@@ -56,6 +56,14 @@ var dashRoutes = [
         rtlName: "لوحة القيادة",
         icon: <RocketIcon color="inherit" />,
         component: TaskForm,
+        layout: "/admin",
+      },
+      {
+        path: "/tasks/assigned",
+        name: "Assigned Task",
+        rtlName: "لوحة القيادة",
+        icon: <RocketIcon color="inherit" />,
+        component: TaskPage,
         layout: "/admin",
       },
 

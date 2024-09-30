@@ -35,9 +35,14 @@ function TaskRow(props) {
       if (listType === "user_tasks") {
         console.log((task_id));
         await deleteTask(task_id)
-
       } else {
-        await updateTask({ volunteer_id: "" }, task_id, "assign")
+        let type
+        if (listType=== 'all_tasks') type = "assign"
+
+        else if (listType === "assigned_tasks") type = "unassign"
+
+
+        await updateTask({ volunteer_id: "" }, task_id,type)
 
       }
       setShowConfirmModal(false)
@@ -127,14 +132,30 @@ function TaskRow(props) {
                 </Flex>
               </Button></> : <>  <Button p="0px" bg="transparent" onClick={(() => {
                 setShowConfirmModal(true)
-                setModalDescription("Are you sure to assign this task..!")
+                setModalDescription(listType == "all_tasks" ? "Are you sure to assign this task..!" : "Are you sure want to un assign this task..?")
               })}>
-                <Flex color={textColor} cursor="pointer" align="center" p="12px">
-                  <Icon as={FaUserPlus} me="4px" /> {/* Icon representing "Assign Task" */}
-                  <Text fontSize="sm" fontWeight="semibold">
-                    Assign Task
-                  </Text>
-                </Flex>
+                {
+                  listType === "all_tasks" ? (
+                    <Flex color={textColor} cursor="pointer" align="center" p="12px">
+                      <Icon as={FaUserPlus} me="4px" /> {/* Icon representing "Assign Task" */}
+                      <Text fontSize="sm" fontWeight="semibold">
+                        Assign Task
+                      </Text>
+                    </Flex>
+                  ) : (<></>)
+                }
+                {
+                  listType === "assigned_tasks" ? (
+                    <Flex color={textColor} cursor="pointer" align="center" p="12px">
+                      <Icon as={FaUserPlus} me="4px" /> {/* Icon representing "Assign Task" */}
+                      <Text fontSize="sm" fontWeight="semibold">
+                        Unassign Task
+                      </Text>
+                    </Flex>
+                  ) : (<></>)
+                }
+
+
               </Button></>}
 
           </Flex>

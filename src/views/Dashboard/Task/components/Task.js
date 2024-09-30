@@ -71,11 +71,19 @@ const Tasks = ({ title, captions, listType }) => {
 
     const handleEditTask = async (values, id, type) => {
         try {
-            if (type === "assign") {
+            console.log("TYPE IN HANDLE EDIT TASK FUNCTION", type);
+
+            if (type === "assign" || type === "unassign") {
                 await taskService.updateTask(id, values, type)
-                await fetchTasks("all_tasks")
-                setAlert({ show: true, status: 'success', description: 'Task assigned successfully' });
-            } else {
+                await fetchTasks(listType)
+                setAlert(
+                    {
+                        show: true,
+                        status: 'success',
+                        description: listType === "all_tasks" ? 'Task assigned successfully' : "Task un assigned successfully"
+                    });
+            }
+            else {
                 history.push({
                     pathname: "/admin/edit/tasks",
                     state: { taskData: values, task_id: id }  // Passing data as state
@@ -85,7 +93,7 @@ const Tasks = ({ title, captions, listType }) => {
                 setAlert({ show: false });
             }, 2000);
         } catch (error) {
-            if(type==="assign"){
+            if (type === "assign") {
                 setAlert({ show: true, status: 'error', description: 'Error assigned task' });
 
             }
