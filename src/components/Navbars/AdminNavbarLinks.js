@@ -14,11 +14,13 @@ import {
   MenuList,
   Text,
   useColorModeValue,
+
 } from "@chakra-ui/react";
 // Assets
 import avatar1 from "assets/img/avatars/avatar1.png";
 import avatar2 from "assets/img/avatars/avatar2.png";
 import avatar3 from "assets/img/avatars/avatar3.png";
+import { SignOutIcon } from "components/Icons/Icons";
 // Custom Icons
 import { ProfileIcon, SettingsIcon } from "components/Icons/Icons";
 // Custom Components
@@ -94,33 +96,77 @@ export default function HeaderLinks(props) {
           borderRadius="inherit"
         />
       </InputGroup>
+      <Menu>
+        <MenuButton>
+          <Button
+            ms="0px"
+            px="0px"
+            // me={{ sm: "2px", md: "8px" }}
+            color={navbarIcon}
+            variant="transparent-with-icon"
+            rightIcon={
+              document.documentElement.dir ? (
+                ""
+              ) : (
+                <ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />
+              )
+            }
+            leftIcon={
+              document.documentElement.dir ? (
+                <ProfileIcon color={navbarIcon} w="18px" h="18px" me="0px" />
+              ) : (
+                ""
+              )
+            }
+            onClick={() => localStorage.removeItem(AUTH_TOKEN)} />
 
-      <Button
-        ms="0px"
-        px="0px"
-        me={{ sm: "2px", md: "16px" }}
-        color={navbarIcon}
-        variant="transparent-with-icon"
-        rightIcon={
-          document.documentElement.dir ? (
-            ""
-          ) : (
-            <ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />
-          )
-        }
-        leftIcon={
-          document.documentElement.dir ? (
-            <ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />
-          ) : (
-            ""
-          )
-        }
-        onClick={() => localStorage.removeItem(AUTH_TOKEN)}
-      >
-        <NavLink to="/auth/signin">
+        </MenuButton>
+        <MenuList>
+          <NavLink to="/admin/profile">
+            <MenuItem icon={<ProfileIcon w="16px" h="16px" />}>
+              Profile
+            </MenuItem>
+          </NavLink>
+          <NavLink to="/auth/signin">
+            <MenuItem
+              icon={<SignOutIcon w="16px" h="16px" />}
+              onClick={() => {
+                localStorage.removeItem(AUTH_TOKEN);
+              }}
+            >
+              Sign Out
+            </MenuItem>
+          </NavLink>
+
+        </MenuList>
+      </Menu>
+
+      {/* <NavLink to="/auth/signin">
+        <Button
+          ms="0px"
+          px="0px"
+          me={{ sm: "2px", md: "16px" }}
+          color={navbarIcon}
+          variant="transparent-with-icon"
+          rightIcon={
+            document.documentElement.dir ? (
+              ""
+            ) : (
+              <SignOutIcon color={navbarIcon} w="22px" h="22px" me="0px" />
+            )
+          }
+          leftIcon={
+            document.documentElement.dir ? (
+              <SignOutIcon color={navbarIcon} w="18px" h="18px" me="0px" />
+            ) : (
+              ""
+            )
+          }
+          onClick={() => localStorage.removeItem(AUTH_TOKEN)}      >
           <Text display={{ sm: "none", md: "flex" }} >Sign Out</Text>
-        </NavLink>
-      </Button>
+        </Button>
+      </NavLink> */}
+
 
       <SidebarResponsive
         logoText={props.logoText}

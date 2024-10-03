@@ -24,13 +24,13 @@ const PlatformSettings = ({ title, subtitle1, subtitle2 }) => {
           <Flex align='center' mb='20px'>
             <Switch colorScheme='teal' me='10px' />
             <Text noOfLines={1} fontSize='md' color='gray.500' fontWeight='400'>
-              Email me when someone follows me
+              Email me when someone add tasks
             </Text>
           </Flex>
           <Flex align='center' mb='20px'>
             <Switch colorScheme='teal' me='10px' />
             <Text noOfLines={1} fontSize='md' color='gray.500' fontWeight='400'>
-              Email me when someone answers on my post
+              Email me when someone assign my task
             </Text>
           </Flex>
           <Flex align='center' mb='20px'>
@@ -39,7 +39,7 @@ const PlatformSettings = ({ title, subtitle1, subtitle2 }) => {
               Email me when someone mentions me
             </Text>
           </Flex>
-          <Text
+          {/* <Text
             fontSize='sm'
             color='gray.500'
             fontWeight='600'
@@ -63,7 +63,7 @@ const PlatformSettings = ({ title, subtitle1, subtitle2 }) => {
             <Text noOfLines={1} fontSize='md' color='gray.500' fontWeight='400'>
               Subscribe to newsletter
             </Text>
-          </Flex>
+          </Flex> */}
         </Flex>
       </CardBody>
     </Card>

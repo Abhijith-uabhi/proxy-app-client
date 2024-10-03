@@ -15,13 +15,26 @@ authService.register = (data) => {
 
 }
 
-authService.signIn=(data)=>{
+authService.signIn = (data) => {
     return (
         api({
-            url:`${basePath}/signin`,
-            method:"post",
+            url: `${basePath}/signin`,
+            method: "post",
             data
-            
+
+
+        })
+    )
+}
+
+
+authService.getUser = () => {
+    return (
+        api({
+            url: `${basePath}/get`,
+            method: "get",
+        
+
 
         })
     )

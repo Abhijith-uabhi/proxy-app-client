@@ -29,7 +29,7 @@ var dashRoutes = [
     layout: "/admin",
   },
   {
-    name: "Manage Task",
+    name: "Manage Tasks",
     category: "account",
     rtlName: "صفحات",
     state: "pageCollapse",
@@ -69,6 +69,14 @@ var dashRoutes = [
 
     ],
   },
+  // {
+  //   path: "/profile",
+  //   name: "Profile",
+  //   rtlName: "لوحة القيادة",
+  //   icon: <PersonIcon color="inherit" />,
+  //   component: Profile,
+  //   layout: "/admin",
+  // },
   // {
   //   path: "/tables",
   //   name: "Tables",

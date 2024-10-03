@@ -521,3 +521,18 @@ export const VisaIcon = createIcon({
     </svg>
   ),
 });
+
+export const SignOutIcon = createIcon({
+  displayName: "SignOutIcon",
+  viewBox: "0 0 24 24",
+  path: (
+    <g>
+      <path d="M0 0h24v24H0V0z" fill="transparent" />
+      <path
+        fill="currentColor"
+        d="M16 7v4H10v2h6v4l4-5-4-5zm-7 9V5h3V3H7v18h5v-2H9z"
+      />
+    </g>
+  ),
+});
+

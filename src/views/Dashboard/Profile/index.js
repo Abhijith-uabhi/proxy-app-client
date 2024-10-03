@@ -2,7 +2,7 @@
 import { Flex, Grid, useColorModeValue } from "@chakra-ui/react";
 import avatar4 from "assets/img/avatars/avatar4.png";
 import ProfileBgImage from "assets/img/ProfileBackground.png";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaCube, FaPenFancy } from "react-icons/fa";
 import { IoDocumentsSharp } from "react-icons/io5";
 import Conversations from "./components/Conversations";
@@ -10,8 +10,29 @@ import Header from "./components/Header";
 import PlatformSettings from "./components/PlatformSettings";
 import ProfileInformation from "./components/ProfileInformation";
 import Projects from "./components/Projects";
+import taskService from "services/taksService";
+import authService from "services/authService";
 
 function Profile() {
+  const [user, setser] = useState()
+
+  useEffect(() => {
+    getUser()
+  }, [])
+
+
+  const getUser = async () => {
+    try {
+      const user = await authService.getUser()
+      console.log(user.data);
+
+      setser(user.data)
+    } catch (error) {
+      console.log("Error fetching the user", error);
+
+    }
+  }
+
   // Chakra color mode
   const textColor = useColorModeValue("gray.700", "white");
   const bgProfile = useColorModeValue(
@@ -19,14 +40,16 @@ function Profile() {
     "linear-gradient(112.83deg, rgba(255, 255, 255, 0.21) 0%, rgba(255, 255, 255, 0) 110.84%)"
   );
 
+
+
   return (
     <Flex direction='column'>
       <Header
         backgroundHeader={ProfileBgImage}
         backgroundProfile={bgProfile}
         avatarImage={avatar4}
-        name={"Esthera Jackson"}
-        email={"esthera@simmmple.com"}
+        name={`${user?.first_name} ${user?.last_name}`}
+        email={user?.email}
         tabs={[
           {
             name: "OVERVIEW",
@@ -50,17 +73,15 @@ function Profile() {
         />
         <ProfileInformation
           title={"Profile Information"}
-          description={
-            "Hi, I’m Esthera Jackson, Decisions: If you can’t decide, the answer is no. If two equally difficult paths, choose the one more painful in the short term (pain avoidance is creating an illusion of equality)."
-          }
-          name={"Esthera Jackson"}
-          mobile={"(44) 123 1234 123"}
-          email={"esthera@simmmple.com"}
+         
+          name={`${user?.first_name} ${user?.last_name}`}
+          mobile={user?.phone_number}
+          email={user?.email}
           location={"United States"}
         />
         <Conversations title={"Conversations"} />
       </Grid>
-      <Projects title={"Projects"} description={"Architects design houses"} />
+      {/* <Projects title={"Projects"} description={"Architects design houses"} /> */}
     </Flex>
   );
 }

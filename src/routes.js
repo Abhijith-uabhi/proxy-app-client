@@ -93,6 +93,14 @@ var routes = [
         component: SignUp,
         layout: "/auth",
     },
+    {
+        path: "/profile",
+        name: "Profile",
+        rtlName: "لوحة القيادة",
+        secondaryNavbar: true,
+        component: SignUp,
+        layout: "/admin",
+    },
 
 ];
 
