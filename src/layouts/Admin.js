@@ -101,25 +101,6 @@ export default function Dashboard(props) {
 	document.documentElement.dir = 'ltr';
 	// Chakra Color Mode
 
-	useEffect(() => {
-
-		socket.on("a_new_event",()=>{
-			console.log("HELLO WORLD");
-			
-		})
-		// Listen to the "task_notification" event and get the data
-		socket.on("task_notification", (data) => {
-			console.log("THE TASK NOTIFICATION RECEIVED:", data.message);
-			alert(data.message)
-			// You can also trigger a pop-up or notification here using the message
-		});
-
-		// Cleanup to avoid adding multiple listeners
-		return () => {
-			socket.off("task_notification");
-		};
-	}, []);
-
 
 	return (
 		<ChakraProvider theme={theme} resetCss={false}>

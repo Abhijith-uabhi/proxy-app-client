@@ -29,9 +29,14 @@ const Tasks = ({ title, captions, listType }) => {
     const [alert, setAlert] = useState({ show: false, status: '', description: '' });
 
 
+
     useEffect(() => {
-        if (listType)
-            fetchTasks(listType)
+        console.log("THE HISTORY O", history.location);
+        if (history.location.pathname === '/admin/tasks'){
+            localStorage.removeItem("notifications")
+        }
+            if (listType)
+                fetchTasks(listType)
     }, [listType])
 
 

@@ -14,6 +14,7 @@ import {
   MenuList,
   Text,
   useColorModeValue,
+  Badge
 
 } from "@chakra-ui/react";
 // Assets
@@ -27,13 +28,17 @@ import { ProfileIcon, SettingsIcon } from "components/Icons/Icons";
 import { ItemContent } from "components/Menu/ItemContent";
 import SidebarResponsive from "components/Sidebar/SidebarResponsive";
 import { AUTH_TOKEN } from "config/authConfig";
+import { socket } from "connection/socket";
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import routes from "routes";
 
 export default function HeaderLinks(props) {
   const { variant, children, fixed, secondary, onOpen, ...rest } = props;
+  const [notifications, setNotifications] = useState()
+  // const notifications = JSON.parse(localStorage.getItem("notifications"))
+
 
   // Chakra Color Mode
   let mainTeal = useColorModeValue("teal.300", "teal.300");
@@ -47,6 +52,41 @@ export default function HeaderLinks(props) {
     mainText = "white";
   }
   const settingsRef = React.useRef();
+
+  useEffect(() => {
+    const savedNotifications = JSON.parse(localStorage.getItem("notifications"));
+    if (savedNotifications) {
+      setNotifications(savedNotifications);
+    }
+
+    // Listen to the "task_notification" event
+    socket.on("task_notification", (data) => {
+      console.log("THE TASK NOTIFICATION RECEIVED:", data);
+      // Update the notifications array
+      let updatedNotifications
+      if (notifications) {
+        updatedNotifications = [...notifications, data];
+
+      } else {
+        updatedNotifications = [data];
+
+      }
+
+      // Update state and localStorage
+      setNotifications(updatedNotifications);
+      localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
+    });
+
+    // Cleanup to avoid adding multiple listeners
+    return () => {
+      socket.off("task_notification");
+    };
+  }, [notifications]); // This ensures that the state updates whenever `notifications` changes
+
+
+
+
+
   return (
     <Flex
       pe={{ sm: "0px", md: "16px" }}
@@ -132,6 +172,7 @@ export default function HeaderLinks(props) {
               icon={<SignOutIcon w="16px" h="16px" />}
               onClick={() => {
                 localStorage.removeItem(AUTH_TOKEN);
+                localStorage.removeItem("notifications")
               }}
             >
               Sign Out
@@ -186,21 +227,42 @@ export default function HeaderLinks(props) {
         h="18px"
       />
       <Menu>
-        <MenuButton>
+        <MenuButton position="relative" >
           <BellIcon color={navbarIcon} w="18px" h="18px" />
+          {notifications?.length > 0 && (
+            <Badge
+              colorScheme="red"
+              borderRadius="full"
+              px={2}
+              position="absolute"
+              top="-4"
+              right="-2"
+              fontSize="0.9em"
+            >
+              {notifications.length}
+            </Badge>
+          )}
         </MenuButton>
         <MenuList p="16px 8px">
           <Flex flexDirection="column">
-            <MenuItem borderRadius="8px" mb="10px">
-              <ItemContent
-                time="13 minutes ago"
-                info="from Alicia"
-                boldInfo="New Message"
-                aName="Alicia"
-                aSrc={avatar1}
-              />
-            </MenuItem>
-            <MenuItem borderRadius="8px" mb="10px">
+
+            {notifications?.map((item) => (
+              <NavLink to="/admin/tasks">
+                <MenuItem borderRadius="8px" mb="10px"  >
+                  <ItemContent
+                    time="13 minutes ago"
+                    info={`from ${item.user}`}
+                    boldInfo="New Task"
+                    aName="Alicia"
+                    aSrc={avatar1}
+                  />
+                </MenuItem>
+              </NavLink>
+
+            ))}
+
+
+            {/* <MenuItem borderRadius="8px" mb="10px">
               <ItemContent
                 time="2 days ago"
                 info="by Josh Henry"
@@ -217,7 +279,7 @@ export default function HeaderLinks(props) {
                 aName="Kara"
                 aSrc={avatar3}
               />
-            </MenuItem>
+            </MenuItem> */}
           </Flex>
         </MenuList>
       </Menu>
