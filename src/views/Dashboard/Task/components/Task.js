@@ -11,6 +11,14 @@ import {
     Tr,
     useColorModeValue,
 } from "@chakra-ui/react";
+import {
+    Previous,
+    Paginator,
+    PageGroup,
+    Page,
+    Next,
+    generatePages
+} from 'chakra-paginator';
 import CustomAlert from "components/Alerts/Alert";
 // Custom components
 import Card from "components/Card/Card.js";
@@ -31,8 +39,8 @@ const Tasks = ({ title, captions, listType }) => {
 
 
     useEffect(() => {
-            if (listType)
-                fetchTasks(listType)
+        if (listType)
+            fetchTasks(listType)
     }, [listType])
 
 
@@ -162,6 +170,29 @@ const Tasks = ({ title, captions, listType }) => {
                     </Tbody>
                 </Table>
             </CardBody>
+            <Flex p={2}>
+                <Spacer />
+                <Paginator
+                    onPageChange={handlePageChange}
+                    pagesQuantity={pagesQuantity - 1}>
+                    <Previous bg="white">
+                        <CgChevronLeft />
+                    </Previous>
+                    <PageGroup>
+                        {generatePages(pagesQuantity)?.map((page) => (
+                            <Page
+                                key={`paginator_page_${page}`}
+                                page={page}
+                                normalStyles={normalStyles}
+                                activeStyles={activeStyles}
+                            />
+                        ))}
+                    </PageGroup>
+                    <Next bg="white">
+                        <CgChevronRight />
+                    </Next>
+                </Paginator>
+            </Flex>
         </Card>
     );
 };

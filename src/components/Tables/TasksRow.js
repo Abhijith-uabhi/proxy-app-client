@@ -37,12 +37,12 @@ function TaskRow(props) {
         await deleteTask(task_id)
       } else {
         let type
-        if (listType=== 'all_tasks') type = "assign"
+        if (listType === 'all_tasks') type = "assign"
 
         else if (listType === "assigned_tasks") type = "unassign"
 
 
-        await updateTask({ volunteer_id: "" }, task_id,type)
+        await updateTask({ volunteer_id: "" }, task_id, type)
 
       }
       setShowConfirmModal(false)
@@ -99,7 +99,7 @@ function TaskRow(props) {
         </Td>
         <Td>
           <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
-            {due_date}
+            {dayjs(due_date).format("YYYY-MM-DD")}
           </Text>
         </Td>
         <Td>
