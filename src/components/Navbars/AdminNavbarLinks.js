@@ -31,14 +31,17 @@ import { AUTH_TOKEN } from "config/authConfig";
 import { socket } from "connection/socket";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom"
+import { useLocation } from "react-router-dom/cjs/react-router-dom";
 import routes from "routes";
+import { timeAgo } from "utils/timeFormatter";
+
 
 export default function HeaderLinks(props) {
   const { variant, children, fixed, secondary, onOpen, ...rest } = props;
   const [notifications, setNotifications] = useState()
-  // const notifications = JSON.parse(localStorage.getItem("notifications"))
 
+  const location=useLocation()
 
   // Chakra Color Mode
   let mainTeal = useColorModeValue("teal.300", "teal.300");
@@ -52,7 +55,6 @@ export default function HeaderLinks(props) {
     mainText = "white";
   }
   const settingsRef = React.useRef();
-
   useEffect(() => {
     const savedNotifications = JSON.parse(localStorage.getItem("notifications"));
     if (savedNotifications) {
@@ -61,15 +63,13 @@ export default function HeaderLinks(props) {
 
     // Listen to the "task_notification" event
     socket.on("task_notification", (data) => {
-      console.log("THE TASK NOTIFICATION RECEIVED:", data);
-      // Update the notifications array
-      let updatedNotifications
+      console.log("TASK NOTIFICATION RECEIVED:", data);
+
+      let updatedNotifications;
       if (notifications) {
         updatedNotifications = [...notifications, data];
-
       } else {
         updatedNotifications = [data];
-
       }
 
       // Update state and localStorage
@@ -77,14 +77,21 @@ export default function HeaderLinks(props) {
       localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
     });
 
-    // Cleanup to avoid adding multiple listeners
+    // Cleanup listener to avoid duplicate events
     return () => {
       socket.off("task_notification");
     };
-  }, [notifications]); // This ensures that the state updates whenever `notifications` changes
+  }, []);
 
+  // Logic to clear notifications when navigating to "/admin/tasks"
+  useEffect(() => {
+    if (location.pathname === "/admin/tasks") {
+      localStorage.removeItem("notifications");
+      setNotifications([]); // Ensure notifications are cleared in the UI
+    }
+  }, [location]);
 
-
+  console.log("Notifications state:", notifications);
 
 
   return (
@@ -246,11 +253,14 @@ export default function HeaderLinks(props) {
         <MenuList p="16px 8px">
           <Flex flexDirection="column">
 
-            {notifications?.map((item) => (
-              <NavLink to="/admin/tasks">
-                <MenuItem borderRadius="8px" mb="10px"  >
+            {notifications?.map((item, index) => (
+              <NavLink to="/admin/tasks" key={index}>
+                <MenuItem
+                  borderRadius="8px"
+                  mb="10px"
+                >
                   <ItemContent
-                    time="13 minutes ago"
+                    time={timeAgo(item.created_at)}
                     info={`from ${item.user}`}
                     boldInfo="New Task"
                     aName="Alicia"
@@ -258,8 +268,8 @@ export default function HeaderLinks(props) {
                   />
                 </MenuItem>
               </NavLink>
-
             ))}
+
 
 
             {/* <MenuItem borderRadius="8px" mb="10px">

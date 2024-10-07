@@ -16,6 +16,8 @@ import {
   RocketIcon,
   SupportIcon,
 } from "components/Icons/Icons";
+import { ViewIcon, AddIcon, CheckCircleIcon, AtSignIcon } from '@chakra-ui/icons';
+
 import TaskPage from "views/Dashboard/Task";
 import TaskForm from "views/Dashboard/Task/components/CreateTask";
 
@@ -38,7 +40,7 @@ var dashRoutes = [
         path: "/tasks",
         name: "Tasks For You",
         rtlName: "لوحة القيادة",
-        icon: <PersonIcon color="inherit" />,
+        icon: <ViewIcon color="inherit" />,
         component: TaskPage,
         layout: "/admin",
       },
@@ -46,7 +48,7 @@ var dashRoutes = [
         path: "/your/tasks",
         name: "Your Tasks",
         rtlName: "لوحة القيادة",
-        icon: <DocumentIcon color="inherit" />,
+        icon: <AtSignIcon color="inherit" />,
         component: TaskPage,
         layout: "/admin",
       },
@@ -54,7 +56,7 @@ var dashRoutes = [
         path: "/create/tasks",
         name: "Create Task",
         rtlName: "لوحة القيادة",
-        icon: <RocketIcon color="inherit" />,
+        icon: <AddIcon color="inherit" />,
         component: TaskForm,
         layout: "/admin",
       },
@@ -62,10 +64,18 @@ var dashRoutes = [
         path: "/tasks/assigned",
         name: "Assigned Task",
         rtlName: "لوحة القيادة",
-        icon: <RocketIcon color="inherit" />,
+        icon: <CheckCircleIcon color="inherit" />,
         component: TaskPage,
         layout: "/admin",
       },
+      // {
+      //   path: "/tasks/assigned",
+      //   name: "Assigned By",
+      //   rtlName: "لوحة القيادة",
+      //   icon: <CheckCircleIcon color="inherit" />,
+      //   component: TaskPage,
+      //   layout: "/admin",
+      // },
 
     ],
   },
