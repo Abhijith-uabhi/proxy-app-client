@@ -223,7 +223,7 @@ export default function HeaderLinks(props) {
         // logo={logo}
         {...rest}
       />
-      <SettingsIcon
+      {/* <SettingsIcon
         cursor="pointer"
         ms={{ base: "16px", xl: "0px" }}
         me="16px"
@@ -232,7 +232,7 @@ export default function HeaderLinks(props) {
         color={navbarIcon}
         w="18px"
         h="18px"
-      />
+      /> */}
       <Menu>
         <MenuButton position="relative" >
           <BellIcon color={navbarIcon} w="18px" h="18px" />

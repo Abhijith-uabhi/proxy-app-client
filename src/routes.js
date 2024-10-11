@@ -8,6 +8,7 @@ import SignIn from "views/Auth/SignIn.js";
 import SignUp from "views/Auth/SignUp.js";
 import TaskPage from "views/Dashboard/Task";
 import TaskForm from "views/Dashboard/Task/components/CreateTask";
+import TaskInfo from "views/Dashboard/TaskInfo";
 
 var routes = [
     {
@@ -38,6 +39,13 @@ var routes = [
         name: "Edit Task",
         rtlName: "لوحة القيادة",
         component: TaskForm,
+        layout: "/admin",
+    },
+    {
+        path: "/task/info",
+        name: "Task Informations",
+        rtlName: "لوحة القيادة",
+        component: TaskInfo,
         layout: "/admin",
     },
     {

@@ -8,6 +8,7 @@ import {
   Text,
   Tr,
   useColorModeValue,
+  Link
 } from "@chakra-ui/react";
 import CustomAlert from "components/Alerts/Alert";
 import Card from "components/Card/Card";
@@ -77,7 +78,15 @@ function TaskRow(props) {
       <Tr>
         <Td>
           <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
-            {title}
+            {listType === "user_tasks" ? <Link textDecoration="underline" onClick={(() => {
+              history.push({
+                pathname: "/admin/task/info",
+                state: { props }  // Passing data as state
+              });
+            })}>
+              {title}
+            </Link> :(title)}
+
           </Text>
         </Td>
 

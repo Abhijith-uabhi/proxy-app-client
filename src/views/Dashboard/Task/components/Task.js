@@ -11,14 +11,7 @@ import {
     Tr,
     useColorModeValue,
 } from "@chakra-ui/react";
-import {
-    Previous,
-    Paginator,
-    PageGroup,
-    Page,
-    Next,
-    generatePages
-} from 'chakra-paginator';
+
 import CustomAlert from "components/Alerts/Alert";
 // Custom components
 import Card from "components/Card/Card.js";
@@ -170,7 +163,7 @@ const Tasks = ({ title, captions, listType }) => {
                     </Tbody>
                 </Table>
             </CardBody>
-            <Flex p={2}>
+            {/* <Flex p={2}>
                 <Spacer />
                 <Paginator
                     onPageChange={handlePageChange}
@@ -192,7 +185,7 @@ const Tasks = ({ title, captions, listType }) => {
                         <CgChevronRight />
                     </Next>
                 </Paginator>
-            </Flex>
+            </Flex> */}
         </Card>
     );
 };
