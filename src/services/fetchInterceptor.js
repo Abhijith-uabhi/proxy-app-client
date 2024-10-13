@@ -1,4 +1,5 @@
 import axios from 'axios';
+import CustomAlert from "../components/Alerts/Alert";
 
 // Create an instance of axios
 const api = axios.create({
@@ -35,6 +36,11 @@ api.interceptors.response.use(
   (error) => {
     // Any status code that falls outside the range of 2xx triggers this function
     if (error.response) {
+      console.log(error.response);
+      if (error.response.status === 404) {
+        console.error(error.response.statusText);
+        
+      }
       // Handle specific status codes
       if (error.response.status === 401) {
         // Unauthorized, you can redirect to the login page, or refresh the token
@@ -45,7 +51,7 @@ api.interceptors.response.use(
       } else if (error.response.status === 500) {
         console.error('Internal Server Error');
       } else {
-        console.error(error.response.data.message || 'An error occurred');
+        console.error(error);
       }
     } else if (error.request) {
       // The request was made but no response was received
