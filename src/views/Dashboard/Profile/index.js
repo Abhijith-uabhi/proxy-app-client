@@ -10,8 +10,8 @@ import Header from "./components/Header";
 import PlatformSettings from "./components/PlatformSettings";
 import ProfileInformation from "./components/ProfileInformation";
 import Projects from "./components/Projects";
-import taskService from "services/taksService";
-import authService from "services/authService";
+
+import userService from "../../../services/userService";
 
 function Profile() {
   const [user, setser] = useState()
@@ -23,7 +23,7 @@ function Profile() {
 
   const getUser = async () => {
     try {
-      const user = await authService.getUser()
+      const user = await userService.getUser()
       console.log(user.data);
 
       setser(user.data)

@@ -27,6 +27,15 @@ taskService.createTask=(data)=>{
     )
 }
 
+taskService.getSingleTask=(id)=>{
+    return (
+        api({
+            url: `${basePath}/get/${id}`,
+            method: "get",
+        })
+    )
+}
+
 
 taskService.updateTask=(id,data,type)=>{
     return (

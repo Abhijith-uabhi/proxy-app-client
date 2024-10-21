@@ -2,7 +2,7 @@ import api from "./fetchInterceptor"
 
 const authService = {}
 
-const basePath = "/api/v1/user"
+const basePath = "/api/v1/auth"
 
 authService.register = (data) => {
     return (
@@ -28,15 +28,4 @@ authService.signIn = (data) => {
 }
 
 
-authService.getUser = () => {
-    return (
-        api({
-            url: `${basePath}/get`,
-            method: "get",
-        
-
-
-        })
-    )
-}
 export default authService

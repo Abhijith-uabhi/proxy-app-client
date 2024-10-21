@@ -78,14 +78,13 @@ function TaskRow(props) {
       <Tr>
         <Td>
           <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
-            {listType === "user_tasks" ? <Link textDecoration="underline" onClick={(() => {
+            {listType !== "all_tasks" ? <Link textDecoration="underline" onClick={(() => {
               history.push({
-                pathname: "/admin/task/info",
-                state: { props }  // Passing data as state
+                pathname: `/admin/task/info/${task_id}`  // Passing data as state
               });
             })}>
               {title}
-            </Link> :(title)}
+            </Link> : (title)}
 
           </Text>
         </Td>

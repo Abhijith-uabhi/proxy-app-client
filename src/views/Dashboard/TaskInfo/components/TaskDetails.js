@@ -1,6 +1,10 @@
 import { Box, Heading, Text, VStack, Flex } from "@chakra-ui/react";
+import dayjs from "dayjs"
 
-const TaskInformation = () => {
+const TaskInformation = ({task}) => {
+  console.log("THE TASK DATE",task?.created_on);
+  
+  
   return (
     <Box p={4} w="100%">
       {/* <Flex align="center" mb={4}>
@@ -12,7 +16,7 @@ const TaskInformation = () => {
         </Text>
       </Flex> */}
       <Heading as="h3" size="lg" mb={4}>
-        Travelling
+       {task?.title}
       </Heading>
 
       <VStack align="start" spacing={3}>
@@ -21,8 +25,7 @@ const TaskInformation = () => {
             Description:
           </Heading>
           <Text >
-            I want to drop my parents in to alshifa hosptal for checkup and return them in to home safely
-            
+           {task?.description}
           </Text>
         </Box>
         <Box>
@@ -31,7 +34,7 @@ const TaskInformation = () => {
               Created At:
             </Heading>
             <Text as="span" fontSize="lg">
-              11/11/2024
+             {dayjs.unix(task?.created_on).format("YYYY-MM-DD")}
             </Text>
           </Flex>
         </Box>

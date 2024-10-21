@@ -42,7 +42,7 @@ var routes = [
         layout: "/admin",
     },
     {
-        path: "/task/info",
+        path: "/task/info/:id",
         name: "Task Informations",
         rtlName: "لوحة القيادة",
         component: TaskInfo,

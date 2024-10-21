@@ -1,88 +1,118 @@
-import { useState } from "react";
-import { Box, Heading, Input, Button, VStack, Text, HStack, Flex, Avatar } from "@chakra-ui/react";
+import { useState, useRef, useEffect } from "react";
+import { Box, Heading, Input, Button, VStack, Text, HStack, Flex, Avatar, Link } from "@chakra-ui/react";
+import dayjs from "dayjs"
+import commentService from "../../../../services/commentService";
 
-const CommentSection = () => {
-  const [comments, setComments] = useState([
-    { user: "User 1", text: "This is a comment.", created_at: "2024-10-12", time: "12:30 PM", replies: [] },
-    { user: "User 2", text: "Another comment here.", created_at: "2024-10-12", time: "1:00 PM", replies: [] },
-  ]);
-  
+const CommentSection = ({ task }) => {
+
+  console.log("THe task is", task);
+
+  const [comments, setComments] = useState([]);
+
   const [newComment, setNewComment] = useState("");
   const [replyingTo, setReplyingTo] = useState(null); // Track which user is being replied to
   const [parentCommentId, setParentCommentId] = useState(null); // Track which comment ID the reply is for
+  const inputRef = useRef(null); // Ref to the input box
+
+  useEffect(() => {
+    fetchComments()
+  }, [])
+
 
   // Function to handle adding a new comment or reply
-  const addComment = () => {
-    if (newComment.trim() === "") return; // Prevent empty comments
-    
-    const newCommentData = {
-      user: "Current User", // Replace with actual user logic if needed
-      text: newComment,
-      created_at: new Date().toLocaleDateString(),
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      replies: [], // Initialize replies as an empty array
-    };
+  const addComment = async () => {
+    try {
+      console.log("the parent comment id is", parentCommentId);
 
-    if (parentCommentId !== null) {
-      // If replying to a comment, add it to the specific comment's replies
-      const updatedComments = comments.map((comment, index) => {
-        if (index === parentCommentId) {
-          return {
-            ...comment,
-            replies: [...comment.replies, newCommentData],
-          };
-        }
-        return comment;
-      });
-      setComments(updatedComments);
-    } else {
-      // If adding a new comment
-      setComments([...comments, newCommentData]);
+      const newCommentData = {
+        task_id: task._id,
+        comment: newComment,
+        ...parentCommentId && { parent_id: parentCommentId }, // Set parent_id if it's a reply, else null
+      };
+
+      const result = await commentService.addComment(newCommentData)
+
+
+      setComments((prev) => [
+        result.data,
+        ...prev,
+      
+      ]); // Add new comment or reply
+      setNewComment(""); // Clear input
+      setReplyingTo(null); // Reset replying state
+      setParentCommentId(null); // Reset parent comment ID
+    } catch (error) {
+      console.log("Error add comment", error);
+
     }
-    
-    setNewComment(""); // Clear input
-    setReplyingTo(null); // Reset replying state
-    setParentCommentId(null); // Reset parent comment ID
+    if (newComment.trim() === "") return; // Prevent empty comment
+
   };
+  console.log("THE COMMENTS IS", comments);
+
+
+  const fetchComments = async () => {
+    try {
+      const result = await commentService.getcomments()
+      if (result.data) {
+        setComments(result.data)
+      }
+    } catch (error) {
+      console.log("ERROR FETCHING THE COMMENTS", error);
+
+    }
+  }
 
   // Function to handle reply button click
-  const handleReply = (user, index) => {
+
+  const handleReply = (user, id) => {
+    console.log("THE ID IS", id);
+
     setReplyingTo(user);
-    setNewComment(`@${user} `); // Pre-fill the input with the user's name
-    setParentCommentId(index); // Set the parent comment ID
+    // setNewComment(`@${user} `); // Pre-fill the input with the user's name
+    setParentCommentId(id); // Set the parent comment ID
+    inputRef.current.scrollIntoView({ behavior: "smooth" }); // Scroll to the input box
+    inputRef.current.focus(); // Focus the input
   };
 
   // Recursive function to render comments and replies
-  const renderComments = (comments) => {
-    return comments.map((comment, index) => (
-      <Box key={index} w="100%" pl={4} borderLeft="1px" borderColor="gray.200" mt={2}>
-        <Flex align="start">
-          <Avatar name={comment.user} />
-          <Box pl={3}>
-            <Flex align="center" justify="space-between">
-              <Text fontWeight="bold" fontSize="sm">{comment.user}</Text>
-              <Text fontSize="sm" color="gray.500" pl={2}>
-                {comment.created_at} • {comment.time}
-              </Text>
-            </Flex>
-            <Text fontSize="md" mt={1}>
-              {comment.text}
-            </Text>
-            {/* Reply Button */}
-            <Button size="xs" mt={2} onClick={() => handleReply(comment.user, index)}>
-              Reply
-            </Button>
+  const renderComments = (comments, parentId = null) => {
+    return comments
+      .filter((comment) => comment.parent_id === parentId) // Filter comments by parent_id
+      .map((comment) => (
+        <Box key={comment.id} w="100%" pl={parentId ? 8 : 4} borderLeft={parentId ? "none" : "1px"} borderColor="gray.200" mt={2}>
+          <Flex align="start">
+            <Avatar name={comment && comment.sendBy[0]?.first_name} />
+            <Box pl={3}>
+              <Flex align="center" justify="space-between">
+                <Text fontWeight="bold" fontSize="sm">{comment.sendBy[0].first_name}</Text>
 
-            {/* Display Replies Recursively */}
-            {comment.replies.length > 0 && (
-              <VStack align="start" spacing={2} mt={3}>
-                {renderComments(comment.replies)}
-              </VStack>
-            )}
-          </Box>
-        </Flex>
-      </Box>
-    ));
+              </Flex>
+              <Text fontSize="md" mt={1}>
+                {comment.comment}
+              </Text>
+              {/* Reply Button */}<HStack>
+
+                <Button size="xs" mt={2} onClick={() => handleReply(comment.user, comment._id)}>
+                  Reply
+                </Button>
+                <Text fontSize="sm" color="gray.500" pl={2}>
+                  {dayjs.unix(comment.created_at).fromNow()}
+                </Text>
+              </HStack>
+
+
+
+              {/* Display Replies Recursively */}
+              {comments.some((reply) => reply.parent_id === comment._id) && (
+                <VStack align="start" spacing={2} mt={3}>
+                  {renderComments(comments, comment._id)} {/* Render replies */}
+                </VStack>
+              )}
+            </Box>
+          </Flex>
+        </Box>
+      ));
   };
 
   return (
@@ -90,10 +120,11 @@ const CommentSection = () => {
       <Heading as="h2" size="md" mb={4}>
         Comments
       </Heading>
-      
+
       {/* Comment Input and Button in the same row */}
       <HStack w="100%" mb={4}>
         <Input
+          ref={inputRef} // Attach ref to the input box
           placeholder="Add a comment..."
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
