@@ -13,19 +13,19 @@ const DetailsSidebar = ({task}) => {
           <Heading as="h3" size="sm">
             Created by:
           </Heading>
-          <Text>{task?.createdBy[0].first_name}</Text>
+          <Text   mt={2}>{task?.createdBy[0].first_name}</Text>
         </Box>
         <Box>
           <Heading as="h3" size="sm">
             Assignee:
           </Heading>
-          <Text>{task?.volunteer_id?task?.assignedBy[0].first_name:"Un Assigned"}</Text>
+          <Text   mt={2}>{task?.volunteer_id?task?.assignedBy[0].first_name:"Un Assigned"}</Text>
         </Box>
         <Box>
           <Heading as="h3" size="sm">
             Due Date:
           </Heading>
-          <Text>{dayjs(task?.due_date).format("YYYY-MM-DD")}</Text>
+          <Text   mt={2}>{dayjs(task?.due_date).format("YYYY-MM-DD")}</Text>
         </Box>
         <Box>
           <Heading  size="sm">
@@ -35,6 +35,7 @@ const DetailsSidebar = ({task}) => {
             bg={task?.priority === "High" ? "red.400" : task?.priority === "Medium" ? "green.400" :"gray.400"}
             color={"white"}
             fontSize="16px"
+            mt={2}
             p="3px 10px"
             borderRadius="8px"
           >

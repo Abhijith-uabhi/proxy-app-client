@@ -25,20 +25,22 @@ const AssigneeList = ({ task }) => {
     const [assigners, setAssigners] = useState([])
 
     useEffect(() => {
-        fetchAssigners()
+        if (task)
+            fetchAssigners()
     }, [task])
 
     const fetchAssigners = async () => {
         try {
-
-            const result = await userService.getAllUsers({ user_ids: task.assignees })
-            setAssigners(result.data)
-
+            if (task.assignees.length) {
+                const result = await userService.getAllUsers({ user_ids: task.assignees })
+                setAssigners(result.data)
+            }
         } catch (error) {
             console.log("ERROR FETCHING THE ASSIGNERS", error);
 
         }
     }
+
 
 
 
@@ -51,35 +53,32 @@ const AssigneeList = ({ task }) => {
             </CardHeader>
             <CardBody px='5px'>
                 <Flex direction='column' w='100%'>
-                    {assigners.length && assigners.map((assignee) => (
+                    {assigners.length ? assigners.map((assignee) => (
                         <Flex justifyContent='space-between' mb='21px'>
                             <Flex align='center'>
-                                <Avatar
-                                    src={avatar2}
-                                    w='50px'
-                                    h='50px'
-                                    borderRadius='15px'
-                                    me='10px'
-                                />
+                            <Avatar name={assignee?.first_name} mr={2} />
                                 <Flex direction='column'>
                                     <Text fontSize='sm' color={textColor} fontWeight='bold'>
-                                        {assignee.first_name}
+                                        {assignee.first_name}{" "}{assignee.last_name}
                                     </Text>
 
 
                                 </Flex>
                             </Flex>
-                            <Button p='0px' bg='transparent' variant='no-hover'>
-                                <Text
-                                    fontSize='sm'
-                                    fontWeight='600'
-                                    color='teal.300'
-                                    alignSelf='center'>
-                                    APPROVE
-                                </Text>
-                            </Button>
+                            {
+                                task.created_by === assignee._id ? <Button p='0px' bg='transparent' variant='no-hover'>
+                                    <Text
+                                        fontSize='sm'
+                                        fontWeight='600'
+                                        color='teal.300'
+                                        alignSelf='center'>
+                                        APPROVE
+                                    </Text>
+                                </Button> : <></>
+                            }
+
                         </Flex>
-                    ))}
+                    )) : <>No Assignees</>}
                 </Flex>
             </CardBody>
         </Card>

@@ -13,16 +13,19 @@ const CommentSection = ({ task }) => {
   const [replyingTo, setReplyingTo] = useState(null); // Track which user is being replied to
   const [parentCommentId, setParentCommentId] = useState(null); // Track which comment ID the reply is for
   const inputRef = useRef(null); // Ref to the input box
+  const [showReplies, setShowReplies] = useState({})
 
   useEffect(() => {
-    fetchComments()
-  }, [])
+    if (task)
+      fetchComments(null)
+  }, [task])
 
 
   // Function to handle adding a new comment or reply
   const addComment = async () => {
     try {
       console.log("the parent comment id is", parentCommentId);
+      if (!newComment.trim()) return
 
       const newCommentData = {
         task_id: task._id,
@@ -36,7 +39,7 @@ const CommentSection = ({ task }) => {
       setComments((prev) => [
         result.data,
         ...prev,
-      
+
       ]); // Add new comment or reply
       setNewComment(""); // Clear input
       setReplyingTo(null); // Reset replying state
@@ -48,14 +51,22 @@ const CommentSection = ({ task }) => {
     if (newComment.trim() === "") return; // Prevent empty comment
 
   };
-  console.log("THE COMMENTS IS", comments);
 
 
-  const fetchComments = async () => {
+
+  const fetchComments = async (parent_id) => {
     try {
-      const result = await commentService.getcomments()
+      const result = await commentService.getcomments(task?._id, parent_id)
       if (result.data) {
-        setComments(result.data)
+        if (!parent_id) {
+          setComments(result.data)
+        } else {
+          setComments((prev) => ([
+            ...prev,
+            ...result.data
+          ]))
+        }
+
       }
     } catch (error) {
       console.log("ERROR FETCHING THE COMMENTS", error);
@@ -66,7 +77,7 @@ const CommentSection = ({ task }) => {
   // Function to handle reply button click
 
   const handleReply = (user, id) => {
-    console.log("THE ID IS", id);
+    console.log("THE ID IS", user);
 
     setReplyingTo(user);
     // setNewComment(`@${user} `); // Pre-fill the input with the user's name
@@ -74,6 +85,39 @@ const CommentSection = ({ task }) => {
     inputRef.current.scrollIntoView({ behavior: "smooth" }); // Scroll to the input box
     inputRef.current.focus(); // Focus the input
   };
+
+
+  const handleViewReply = async (commentId) => {
+    try {
+      fetchComments(commentId),
+        setShowReplies((prev) => ({
+          ...prev,
+          [commentId]: true
+        }))
+    } catch (error) {
+      console.log("Error handle view reply".error);
+
+    }
+  }
+  const handleHideReply = async (commentId) => {
+    try {
+      console.log("YES IT IS WORKING");
+      
+      setShowReplies((prev) => ({
+        ...prev,
+        [commentId]: false
+      }))
+      const updatedComents = comments.filter((item) =>  item.parent_id !== commentId )
+      console.log("the updated comments",updatedComents);
+      
+      setComments(updatedComents)
+    } catch (error) {
+      console.log("ERROR HANDLE HIDE REPLY", error);
+
+    }
+  }
+
+  console.log("THE SHOW REPLIES", showReplies);
 
   // Recursive function to render comments and replies
   const renderComments = (comments, parentId = null) => {
@@ -84,24 +128,30 @@ const CommentSection = ({ task }) => {
           <Flex align="start">
             <Avatar name={comment && comment.sendBy[0]?.first_name} />
             <Box pl={3}>
-              <Flex align="center" justify="space-between">
-                <Text fontWeight="bold" fontSize="sm">{comment.sendBy[0].first_name}</Text>
-
+              <Flex align="center" >
+                <Text fontWeight="bold" fontSize="md">{comment.sendBy[0].first_name}</Text>
+                <Text fontSize="sm" ml={2}>
+                  {comment.comment}
+                </Text>
               </Flex>
-              <Text fontSize="md" mt={1}>
-                {comment.comment}
-              </Text>
-              {/* Reply Button */}<HStack>
 
-                <Button size="xs" mt={2} onClick={() => handleReply(comment.user, comment._id)}>
-                  Reply
-                </Button>
+              <HStack>
                 <Text fontSize="sm" color="gray.500" pl={2}>
                   {dayjs.unix(comment.created_at).fromNow()}
-                </Text>
+                </Text>Ï
+                <Button size="xs" mt={2} onClick={() => handleReply(comment.sendBy, comment._id)}>
+                  Reply
+                </Button>
+
+
               </HStack>
+              {comment.hasReplies ?
+                <HStack mt={2}>
+                  <Text fontSize="sm" cursor="pointer" onClick={() => {
 
-
+                    { showReplies[comment._id] ? handleHideReply(comment._id) : handleViewReply(comment._id) }
+                  }}>{showReplies[comment._id] ? "--- Hide replies" : "---- View replies"}</Text>
+                </HStack> : <></>}
 
               {/* Display Replies Recursively */}
               {comments.some((reply) => reply.parent_id === comment._id) && (
