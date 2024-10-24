@@ -31,9 +31,11 @@ import { AUTH_TOKEN } from "config/authConfig";
 import { socket } from "connection/socket";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom"
 import { useLocation } from "react-router-dom/cjs/react-router-dom";
 import routes from "routes";
+import { logout } from "../../store/slices/authSlice";
 import { timeAgo } from "utils/timeFormatter";
 
 
@@ -41,7 +43,7 @@ export default function HeaderLinks(props) {
   const { variant, children, fixed, secondary, onOpen, ...rest } = props;
   const [notifications, setNotifications] = useState()
 
-  const location=useLocation()
+  const location = useLocation()
 
   // Chakra Color Mode
   let mainTeal = useColorModeValue("teal.300", "teal.300");
@@ -54,7 +56,8 @@ export default function HeaderLinks(props) {
     navbarIcon = "white";
     mainText = "white";
   }
-  const settingsRef = React.useRef();
+  const dispatch = useDispatch()
+
   useEffect(() => {
     const savedNotifications = JSON.parse(localStorage.getItem("notifications"));
     if (savedNotifications) {
@@ -91,8 +94,16 @@ export default function HeaderLinks(props) {
     }
   }, [location]);
 
-  console.log("Notifications state:", notifications);
+  const handleSignout = async () => {
+    try {
+      localStorage.removeItem(AUTH_TOKEN);
+      localStorage.removeItem("notifications")
+      dispatch(logout())
+    } catch (error) {
+      console.log("ERROR HANDLIG THE SIGN OUT", error);
 
+    }
+  }
 
   return (
     <Flex
@@ -178,8 +189,7 @@ export default function HeaderLinks(props) {
             <MenuItem
               icon={<SignOutIcon w="16px" h="16px" />}
               onClick={() => {
-                localStorage.removeItem(AUTH_TOKEN);
-                localStorage.removeItem("notifications")
+                handleSignout()
               }}
             >
               Sign Out

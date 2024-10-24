@@ -18,11 +18,17 @@ import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
 import React, { useEffect, useState } from "react";
 import userService from "../../../../services/userService"
+import { useSelector } from "react-redux";
 
 const AssigneeList = ({ task }) => {
     // Chakra color mode
     const textColor = useColorModeValue("gray.700", "white");
     const [assigners, setAssigners] = useState([])
+
+    const { user } = useSelector((state) => state.auth)
+
+    console.log("THE USER ID IS", user, task?.created_by);
+
 
     useEffect(() => {
         if (task)
@@ -56,9 +62,9 @@ const AssigneeList = ({ task }) => {
                     {assigners.length ? assigners.map((assignee) => (
                         <Flex justifyContent='space-between' mb='21px'>
                             <Flex align='center'>
-                            <Avatar name={assignee?.first_name} mr={2} />
+                                <Avatar name={assignee?.first_name} />
                                 <Flex direction='column'>
-                                    <Text fontSize='sm' color={textColor} fontWeight='bold'>
+                                    <Text fontSize='sm' color={textColor} fontWeight='bold' ml={3}>
                                         {assignee.first_name}{" "}{assignee.last_name}
                                     </Text>
 
@@ -66,7 +72,7 @@ const AssigneeList = ({ task }) => {
                                 </Flex>
                             </Flex>
                             {
-                                task.created_by === assignee._id ? <Button p='0px' bg='transparent' variant='no-hover'>
+                                task.created_by === user._id ? <Button p='0px' bg='transparent' variant='no-hover'>
                                     <Text
                                         fontSize='sm'
                                         fontWeight='600'

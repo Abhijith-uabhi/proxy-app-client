@@ -19,6 +19,8 @@ import signInImage from "assets/img/signInImage.png";
 import authService from "services/authService";
 import { AUTH_TOKEN } from "config/authConfig";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../../store/slices/authSlice";
 
 // Validation schema
 const SignInSchema = Yup.object().shape({
@@ -34,6 +36,8 @@ function SignIn() {
   const titleColor = useColorModeValue("teal.300", "teal.200");
   const textColor = useColorModeValue("gray.400", "white");
 
+  const dispatch=useDispatch()
+
   const history=useHistory()
 
   const handleSignin = async (values) => {
@@ -41,6 +45,8 @@ function SignIn() {
       console.log("Form Submitted", values);
       const res=await authService.signIn(values)
       localStorage.setItem(AUTH_TOKEN,res.data.token)
+      dispatch(loginSuccess(res.data))
+     
       history.push("/admin");
 
       

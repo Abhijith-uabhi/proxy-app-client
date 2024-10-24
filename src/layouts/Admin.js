@@ -22,18 +22,41 @@ import PanelContent from '../components/Layout/PanelContent';
 import { AUTH_TOKEN } from 'config/authConfig';
 import SignIn from 'views/Auth/SignIn';
 import { socket } from 'connection/socket';
+import { useDispatch, useSelector } from 'react-redux';
+import userService from '../services/userService';
+import { authenticated } from '../store/slices/authSlice';
 
 
 
 export default function Dashboard(props) {
 	const { ...rest } = props;
-
-	const token = localStorage.getItem(AUTH_TOKEN)
-
 	// states and functions
 	const [sidebarVariant, setSidebarVariant] = useState('transparent');
 	const [fixed, setFixed] = useState(false);
 	// functions for changing the states from components
+	const dispatch = useDispatch()
+
+	const { user, token } = useSelector((state) => state.auth)
+
+	console.log("THE USER IS ", user);
+
+
+	useEffect(() => {
+		getUser()
+	}, [token])
+
+
+	const getUser = async () => {
+		try {
+			const user = await userService.getUser()
+			console.log(user.data);
+			dispatch(authenticated({ user: user.data }))
+		} catch (error) {
+			console.log("Error fetching the user", error);
+
+		}
+	}
+
 	const getRoute = () => {
 		return window.location.pathname !== '/admin/full-screen-maps';
 	};

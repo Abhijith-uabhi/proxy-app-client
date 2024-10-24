@@ -12,26 +12,11 @@ import ProfileInformation from "./components/ProfileInformation";
 import Projects from "./components/Projects";
 
 import userService from "../../../services/userService";
+import { useSelector } from "react-redux";
 
 function Profile() {
-  const [user, setser] = useState()
 
-  useEffect(() => {
-    getUser()
-  }, [])
-
-
-  const getUser = async () => {
-    try {
-      const user = await userService.getUser()
-      console.log(user.data);
-
-      setser(user.data)
-    } catch (error) {
-      console.log("Error fetching the user", error);
-
-    }
-  }
+  const { user } = useSelector((state)=>(state.auth))
 
   // Chakra color mode
   const textColor = useColorModeValue("gray.700", "white");
@@ -73,7 +58,7 @@ function Profile() {
         />
         <ProfileInformation
           title={"Profile Information"}
-         
+
           name={`${user?.first_name} ${user?.last_name}`}
           mobile={user?.phone_number}
           email={user?.email}
