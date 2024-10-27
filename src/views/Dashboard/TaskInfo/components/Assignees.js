@@ -5,6 +5,8 @@ import {
     Flex,
     Text,
     useColorModeValue,
+    Box,
+    Heading,VStack
 } from "@chakra-ui/react";
 // Assets
 import avatar2 from "assets/img/avatars/avatar2.png";
@@ -51,13 +53,16 @@ const AssigneeList = ({ task }) => {
 
 
     return (
-        <Card p='16px'>
-            <CardHeader p='12px 5px' mb='12px'>
+        <Box p={4} border="1px" mt={2} borderColor="gray.200" borderRadius="md" w="100%">
+
+
+            {/* <Card p='16px'> */}
+            <Heading p='12px 5px' mb='12px'>
                 <Text fontSize='lg' color={textColor} fontWeight='bold'>
                     Assigners
                 </Text>
-            </CardHeader>
-            <CardBody px='5px'>
+            </Heading>
+            <VStack >
                 <Flex direction='column' w='100%'>
                     {assigners.length ? assigners.map((assignee) => (
                         <Flex justifyContent='space-between' mb='21px'>
@@ -86,8 +91,14 @@ const AssigneeList = ({ task }) => {
                         </Flex>
                     )) : <>No Assignees</>}
                 </Flex>
-            </CardBody>
-        </Card>
+
+            </VStack>
+
+
+            {/* // </Card> */}
+        </Box>
+
+
     );
 };
 

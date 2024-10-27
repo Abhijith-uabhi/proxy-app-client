@@ -8,6 +8,7 @@ import Card from "components/Card/Card";
 import { useParams } from 'react-router-dom';
 import taskService from "../../../services/taksService";
 import AssigneeList from "./components/Assignees";
+import { position } from "stylis";
 
 
 function TaskInfo() {
@@ -31,15 +32,19 @@ function TaskInfo() {
 
   return (
     <Flex direction='column' pt={{ base: "120px", md: "75px" }}>
-      <Card>
-        <Grid templateColumns="2fr 1fr" gap={6}>
-          <GridItem>
+      <Card>x
+        <Grid templateColumns="2fr 1fr" gap={6} >
+          <GridItem maxHeight={1000} overflowY={"auto"} css={{
+            '&::-webkit-scrollbar': { display: 'none' }, // Hides scrollbar for Chrome, Safari, and Edge
+            '-ms-overflow-style': 'none', // Hides scrollbar for Internet Explorer and Edge
+            'scrollbar-width': 'none', // Hides scrollbar for Firefox
+          }}>
             <TaskInformation task={task} />
             <CommentSection task={task} />
           </GridItem>
-          <GridItem>
+          <GridItem >
             <DetailsSidebar task={task} />
-            <AssigneeList task={task}/>
+            <AssigneeList task={task} />
           </GridItem>
         </Grid>
       </Card>
