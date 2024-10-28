@@ -28,7 +28,7 @@ const TaskInformation = ({task}) => {
            {task?.description}
           </Text>
         </Box>
-        <Box>
+        {/* <Box>
           <Flex align="center" mb={4}>
             <Heading as="h3" size="sm" mr={2}>
               Created At:
@@ -37,7 +37,7 @@ const TaskInformation = ({task}) => {
              {dayjs.unix(task?.created_on).format("YYYY-MM-DD")}
             </Text>
           </Flex>
-        </Box>
+        </Box> */}
       </VStack>
     </Box>
   );

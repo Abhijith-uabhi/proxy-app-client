@@ -176,7 +176,7 @@ function TaskRow(props) {
             onClose={setShowConfirmModal}
             title="Confirm"
             description={modalDescription}
-            handleOk={handleOk}
+            handleConfirm={handleOk}
           />)
       }
     </>

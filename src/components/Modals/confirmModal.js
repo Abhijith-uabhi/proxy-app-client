@@ -11,7 +11,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
-const ConfirmModal = ({isOpen, onClose,title,description,handleOk }) => {
+const ConfirmModal = ({isOpen, onClose,title,description,handleConfirm }) => {
 
     
 
@@ -31,7 +31,7 @@ const ConfirmModal = ({isOpen, onClose,title,description,handleOk }) => {
             <Button colorScheme="blue" mr={3} onClick={()=>{onClose(false)}}>
               Close
             </Button>
-            <Button colorScheme="blue" onClick={()=>handleOk()}>OK</Button>
+            <Button colorScheme="blue" onClick={()=>handleConfirm()}>Yes</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

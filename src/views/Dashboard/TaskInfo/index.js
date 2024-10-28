@@ -9,12 +9,13 @@ import { useParams } from 'react-router-dom';
 import taskService from "../../../services/taksService";
 import AssigneeList from "./components/Assignees";
 import { position } from "stylis";
+import { useSelector } from "react-redux";
 
 
 function TaskInfo() {
   const [task, setTask] = useState()
   const { id } = useParams();
-
+  const { user } = useSelector((state) => state.auth)
   useEffect(() => {
     fetchTask()
   }, [])
@@ -32,9 +33,9 @@ function TaskInfo() {
 
   return (
     <Flex direction='column' pt={{ base: "120px", md: "75px" }}>
-      <Card>x
+      <Card>
         <Grid templateColumns="2fr 1fr" gap={6} >
-          <GridItem maxHeight={1000} overflowY={"auto"} css={{
+          <GridItem maxHeight={"100vh"} overflowY={"auto"} css={{
             '&::-webkit-scrollbar': { display: 'none' }, // Hides scrollbar for Chrome, Safari, and Edge
             '-ms-overflow-style': 'none', // Hides scrollbar for Internet Explorer and Edge
             'scrollbar-width': 'none', // Hides scrollbar for Firefox
@@ -44,7 +45,8 @@ function TaskInfo() {
           </GridItem>
           <GridItem >
             <DetailsSidebar task={task} />
-            <AssigneeList task={task} />
+            {task?.created_by === user?._id ? <AssigneeList task={task}  fetchTask={fetchTask}/> : <></>}
+
           </GridItem>
         </Grid>
       </Card>

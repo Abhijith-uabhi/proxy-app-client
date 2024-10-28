@@ -4,11 +4,8 @@ import { motion } from "framer-motion";
 
 
 const CustomAlert = ({ status, description }) => {
-  console.log("Hello worlf");
   
-
   const MotionBox = motion(Box);
-
 
   return (
     <MotionBox
