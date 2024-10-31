@@ -3,7 +3,7 @@ import { Box, Heading, Input, Button, VStack, Text, HStack, Flex, Avatar, Link }
 import dayjs from "dayjs"
 import commentService from "../../../../services/commentService";
 
-const CommentSection = ({ task }) => {
+const CommentSection = ({ task, }) => {
 
   console.log("THe task is", task);
 

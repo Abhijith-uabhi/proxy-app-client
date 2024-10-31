@@ -16,6 +16,7 @@ function TaskInfo() {
   const [task, setTask] = useState()
   const { id } = useParams();
   const { user } = useSelector((state) => state.auth)
+  const [allowComments, setAllowComments] = useState(false)
   useEffect(() => {
     fetchTask()
   }, [])
@@ -24,6 +25,11 @@ function TaskInfo() {
     try {
       const task = await taskService.getSingleTask(id)
       setTask(task.data)
+      if (task.data.created_by === user._id || task.data.volunteer_id === user._id) {
+        console.log("YES IT IS");
+        
+        setAllowComments(true)
+      }
 
     } catch (error) {
       console.log("ERROR FETCHING THE TASK", error);
@@ -41,11 +47,14 @@ function TaskInfo() {
             'scrollbar-width': 'none', // Hides scrollbar for Firefox
           }}>
             <TaskInformation task={task} />
-            <CommentSection task={task} />
+            {allowComments && (
+              <CommentSection task={task} />
+            )}
+
           </GridItem>
           <GridItem >
-            <DetailsSidebar task={task} />
-            {task?.created_by === user?._id ? <AssigneeList task={task}  fetchTask={fetchTask}/> : <></>}
+            <DetailsSidebar task={task} isTaskOwner={task?.created_by === user?._id }   />
+            {task?.created_by === user?._id ? <AssigneeList task={task} fetchTask={fetchTask} /> : <></>}
 
           </GridItem>
         </Grid>

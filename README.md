@@ -41,7 +41,7 @@ cd  proxy-app-client
 
 Build and start the project
 
-docker-compose up --build
+docker-compose up -d --build 
 
 Stop the project
 

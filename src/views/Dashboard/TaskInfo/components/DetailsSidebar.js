@@ -1,7 +1,7 @@
 import { Box, Heading, Text, VStack, Badge, Flex } from "@chakra-ui/react";
 import dayjs from "dayjs"
 
-const DetailsSidebar = ({ task }) => {
+const DetailsSidebar = ({ task, isTaskOwner }) => {
   return (
     <Box p={4} border="1px" borderColor="gray.200" borderRadius="md" w="100%">
       <Heading as="h2" size="md" mb={4}>
@@ -15,16 +15,19 @@ const DetailsSidebar = ({ task }) => {
           </Heading>
           <Text mt={2}>{task?.createdBy[0].first_name}</Text>
         </Box>
-        <Box>
-          <Heading as="h3" size="sm">
-            Assignee:
-          </Heading>
-          <Text mt={2}>
-            {task?.volunteer_id
-              ? `${task?.assignedBy[0].first_name} ${task?.assignedBy[0].last_name}`
-              : "Un Assigned"}
-          </Text>
-        </Box>
+        {isTaskOwner && (
+          <Box>
+            <Heading as="h3" size="sm">
+              Assignee:
+            </Heading>
+            <Text mt={2}>
+              {task?.volunteer_id
+                ? `${task?.assignedBy[0].first_name} ${task?.assignedBy[0].last_name}`
+                : "Un Assigned"}
+            </Text>
+          </Box>
+        )}
+
         <Box>
           <Heading as="h3" size="sm" >
             Created At:
