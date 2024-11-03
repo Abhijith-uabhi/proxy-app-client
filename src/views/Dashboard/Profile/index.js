@@ -36,26 +36,21 @@ function Profile() {
         name={`${user?.first_name} ${user?.last_name}`}
         email={user?.email}
         tabs={[
+          // {
+          //   name: "OVERVIEW",
+          //   icon: <FaCube w='100%' h='100%' />,
+          // },
+          // {
+          //   name: "TEAMS",
+          //   icon: <IoDocumentsSharp w='100%' h='100%' />,
+          // },
           {
-            name: "OVERVIEW",
-            icon: <FaCube w='100%' h='100%' />,
-          },
-          {
-            name: "TEAMS",
-            icon: <IoDocumentsSharp w='100%' h='100%' />,
-          },
-          {
-            name: "PROJECTS",
+            name: "EDIT PROFILE",
             icon: <FaPenFancy w='100%' h='100%' />,
           },
         ]}
       />
       <Grid templateColumns={{ sm: "1fr", xl: "repeat(3, 1fr)" }} gap='22px'>
-        <PlatformSettings
-          title={"Platform Settings"}
-          subtitle1={"ACCOUNT"}
-          subtitle2={"APPLICATION"}
-        />
         <ProfileInformation
           title={"Profile Information"}
 
@@ -64,7 +59,12 @@ function Profile() {
           email={user?.email}
           location={"United States"}
         />
-        <Conversations title={"Conversations"} />
+           <PlatformSettings
+          title={"Platform Settings"}
+          subtitle1={"ACCOUNT"}
+          // subtitle2={"APPLICATION"}
+        />
+        {/* <Conversations title={"Conversations"} />/ */}
       </Grid>
       {/* <Projects title={"Projects"} description={"Architects design houses"} /> */}
     </Flex>

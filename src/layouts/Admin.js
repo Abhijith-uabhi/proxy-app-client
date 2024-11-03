@@ -7,8 +7,6 @@ import AdminNavbar from 'components/Navbars/AdminNavbar.js';
 import Sidebar from 'components/Sidebar';
 import React, { useEffect, useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import routes from 'routes';
-import dashRoutes from 'config/navigationConfig';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
@@ -25,6 +23,8 @@ import { socket } from 'connection/socket';
 import { useDispatch, useSelector } from 'react-redux';
 import userService from '../services/userService';
 import { authenticated } from '../store/slices/authSlice';
+import navigationConfig from 'config/navigationConfig';
+import RoutesConfig from 'routes';
 
 
 
@@ -33,17 +33,33 @@ export default function Dashboard(props) {
 	// states and functions
 	const [sidebarVariant, setSidebarVariant] = useState('transparent');
 	const [fixed, setFixed] = useState(false);
+	const [navRoutes, setNavRoutes] = useState([])
 	// functions for changing the states from components
 	const dispatch = useDispatch()
 
 	const { user, token } = useSelector((state) => state.auth)
+	
+	const routes = RoutesConfig();
 
-	console.log("THE USER IS ", user);
+
 
 
 	useEffect(() => {
 		getUser()
 	}, [token])
+
+	useEffect(() => {
+		if (user)
+			if (user.role === "admin") {
+				setNavRoutes(navigationConfig.admin)       
+			} else if (user.role === "agent") {
+				setNavRoutes(navigationConfig.agent)
+			} else {
+				setNavRoutes(navigationConfig.author)
+			}
+
+	}, [user])
+
 
 
 	const getUser = async () => {
@@ -101,7 +117,7 @@ export default function Dashboard(props) {
 		return activeNavbar;
 	};
 	const getRoutes = (routes) => {
-		return routes.map((prop, key) => {
+		return routes?.map((prop, key) => {
 			if (prop.collapse) {
 				return getRoutes(prop.views);
 			}
@@ -128,7 +144,7 @@ export default function Dashboard(props) {
 	return (
 		<ChakraProvider theme={theme} resetCss={false}>
 			<Sidebar
-				routes={dashRoutes}
+				routes={navRoutes}
 				logoText={'Project X'}
 				display='none'
 				sidebarVariant={sidebarVariant}

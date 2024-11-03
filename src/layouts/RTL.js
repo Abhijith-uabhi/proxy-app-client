@@ -7,8 +7,7 @@ import Footer from 'components/Footer/Footer.js';
 import AdminNavbar from 'components/Navbars/AdminNavbar.js';
 import Sidebar from 'components/Sidebar';
 import React, { useState } from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
-import routes from 'routes.js';
+import dashRoutes from 'config/navigationConfig';
 // Custom Chakra theme
 import theme from 'theme/theme.js';
 import FixedPlugin from '../components/FixedPlugin/FixedPlugin';
@@ -22,8 +21,8 @@ import PanelContent from '../components/Layout/PanelContent';
 export default function Dashboard(props) {
 	const { ...rest } = props;
 	// states and functions
-	const [ sidebarVariant, setSidebarVariant ] = useState('transparent');
-	const [ fixed, setFixed ] = useState(false);
+	const [sidebarVariant, setSidebarVariant] = useState('transparent');
+	const [fixed, setFixed] = useState(false);
 	const getRoute = () => {
 		return window.location.pathname !== '/admin/full-screen-maps';
 	};
@@ -89,7 +88,8 @@ export default function Dashboard(props) {
 		<ChakraProvider theme={theme} resetCss={false}>
 			<RtlProvider>
 				<Sidebar
-					routes={routes}
+					routes={dashRoutes
+					}
 					logoText={'PURITY UI DASHBOARD'}
 					display='none'
 					sidebarVariant={sidebarVariant}
@@ -105,8 +105,8 @@ export default function Dashboard(props) {
 						<AdminNavbar
 							onOpen={onOpen}
 							logoText={'PURITY UI DASHBOARD'}
-							brandText={getActiveRoute(routes)}
-							secondary={getActiveNavbar(routes)}
+							brandText={getActiveRoute(dashRoutes)}
+							secondary={getActiveNavbar(dashRoutes)}
 							fixed={fixed}
 							{...rest}
 						/>
@@ -115,7 +115,7 @@ export default function Dashboard(props) {
 						<PanelContent>
 							<PanelContainer>
 								<Switch>
-									{getRoutes(routes)}
+									{getRoutes(dashRoutes)}
 									<Redirect from='/rtl' to='/rtl/rtl-support-page' />
 								</Switch>
 							</PanelContainer>
@@ -123,10 +123,10 @@ export default function Dashboard(props) {
 					) : null}
 					<Footer />
 					<Portal>
-						<FixedPlugin secondary={getActiveNavbar(routes)} fixed={fixed} onOpen={onOpen} />
+						<FixedPlugin secondary={getActiveNavbar(dashRoutes)} fixed={fixed} onOpen={onOpen} />
 					</Portal>
 					<Configurator
-						secondary={getActiveNavbar(routes)}
+						secondary={getActiveNavbar(dashRoutes)}
 						isOpen={isOpen}
 						onClose={onClose}
 						isChecked={fixed}

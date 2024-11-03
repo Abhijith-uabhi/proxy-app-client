@@ -31,10 +31,10 @@ import { AUTH_TOKEN } from "config/authConfig";
 import { socket } from "connection/socket";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom"
 import { useLocation } from "react-router-dom/cjs/react-router-dom";
-import routes from "routes";
+import navigationConfig from 'config/navigationConfig';
 import { logout } from "../../store/slices/authSlice";
 import { timeAgo } from "utils/timeFormatter";
 
@@ -42,6 +42,8 @@ import { timeAgo } from "utils/timeFormatter";
 export default function HeaderLinks(props) {
   const { variant, children, fixed, secondary, onOpen, ...rest } = props;
   const [notifications, setNotifications] = useState()
+  const [routes, setRoutes] = useState([])
+
 
   const location = useLocation()
 
@@ -57,7 +59,8 @@ export default function HeaderLinks(props) {
     mainText = "white";
   }
   const dispatch = useDispatch()
-
+  const { user } = useSelector((state) => state.auth)
+  
   useEffect(() => {
     const savedNotifications = JSON.parse(localStorage.getItem("notifications"));
     if (savedNotifications) {
@@ -93,6 +96,20 @@ export default function HeaderLinks(props) {
       setNotifications([]); // Ensure notifications are cleared in the UI
     }
   }, [location]);
+
+
+
+  useEffect(() => {
+    if (user)
+      if (user.role === "admin") {
+        setRoutes(navigationConfig.admin)
+      } else if (user.role === "agent") {
+        setRoutes(navigationConfig.agent)
+      } else {
+        setRoutes(navigationConfig.author)
+      }
+
+  }, [user])
 
   const handleSignout = async () => {
     try {

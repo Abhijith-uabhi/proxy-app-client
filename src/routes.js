@@ -1,4 +1,4 @@
-// import
+// imports
 import Dashboard from "views/Dashboard/Dashboard";
 import Tables from "views/Dashboard/Tables";
 import Billing from "views/Dashboard/Billing";
@@ -9,8 +9,9 @@ import SignUp from "views/Auth/SignUp.js";
 import TaskPage from "views/Dashboard/Task";
 import TaskForm from "views/Dashboard/Task/components/CreateTask";
 import TaskInfo from "views/Dashboard/TaskInfo";
+import { useSelector } from "react-redux";
 
-var routes = [
+const getRoutes = (user) => [
     {
         path: "/dashboard",
         name: "Dashboard",
@@ -18,29 +19,45 @@ var routes = [
         component: Dashboard,
         layout: "/admin",
     },
+    ...(user?.role === "agent" || user?.role === "admin" ? [
+        {
+            path: "/tasks",
+            name: "Tasks For You",
+            rtlName: "لوحة القيادة",
+            component: TaskPage,
+            layout: "/admin",
+        }, {
+            path: "/tasks/assigned",
+            name: "Assigned Task",
+            rtlName: "لوحة القيادة",
+            component: TaskPage,
+            layout: "/admin",
+          },
 
-
-    {
-        path: "/tasks",
-        name: "Tasks For You",
-        rtlName: "لوحة القيادة",
-        component: TaskPage,
-        layout: "/admin",
-    },
-    {
-        path: "/your/tasks",
-        name: "Your Tasks",
-        rtlName: "لوحة القيادة",
-        component: TaskPage,
-        layout: "/admin",
-    },
-    {
-        path: "/edit/tasks",
-        name: "Edit Task",
-        rtlName: "لوحة القيادة",
-        component: TaskForm,
-        layout: "/admin",
-    },
+    ] : []),
+    ...(user?.role === "author" || user?.role === "admin" ? [
+        {
+            path: "/your/tasks",
+            name: "Your Tasks",
+            rtlName: "لوحة القيادة",
+            component: TaskPage,
+            layout: "/admin",
+        },
+        {
+            path: "/edit/tasks",
+            name: "Edit Task",
+            rtlName: "لوحة القيادة",
+            component: TaskForm,
+            layout: "/admin",
+        },
+        {
+            path: "/create/tasks",
+            name: "Create Task",
+            rtlName: "لوحة القيادة",
+            component: TaskForm,
+            layout: "/admin",
+        }
+    ] : []),
     {
         path: "/task/info/:id",
         name: "Task Informations",
@@ -48,14 +65,6 @@ var routes = [
         component: TaskInfo,
         layout: "/admin",
     },
-    {
-        path: "/create/tasks",
-        name: "Create Task",
-        rtlName: "لوحة القيادة",
-        component: TaskForm,
-        layout: "/admin",
-    },
-
     {
         path: "/tables",
         name: "Tables",
@@ -77,7 +86,6 @@ var routes = [
         component: RTLPage,
         layout: "/rtl",
     },
-
     {
         path: "/profile",
         name: "Profile",
@@ -100,19 +108,13 @@ var routes = [
         secondaryNavbar: true,
         component: SignUp,
         layout: "/auth",
-    },
-    {
-        path: "/profile",
-        name: "Profile",
-        rtlName: "لوحة القيادة",
-        secondaryNavbar: true,
-        component: SignUp,
-        layout: "/admin",
-    },
-
+    }
 ];
 
+// Component to export routes
+const RoutesConfig = () => {
+    const { user } = useSelector((state) => state.auth);
+    return getRoutes(user);
+};
 
-export default routes;
-
-
+export default RoutesConfig;

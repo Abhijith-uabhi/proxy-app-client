@@ -17,6 +17,7 @@ function TaskInfo() {
   const { id } = useParams();
   const { user } = useSelector((state) => state.auth)
   const [allowComments, setAllowComments] = useState(false)
+  
   useEffect(() => {
     fetchTask()
   }, [])
@@ -44,11 +45,11 @@ function TaskInfo() {
           <GridItem maxHeight={"100vh"} overflowY={"auto"} css={{
             '&::-webkit-scrollbar': { display: 'none' }, // Hides scrollbar for Chrome, Safari, and Edge
             '-ms-overflow-style': 'none', // Hides scrollbar for Internet Explorer and Edge
-            'scrollbar-width': 'none', // Hides scrollbar for Firefox
+            'scrollbar-width': 'none', // Hides scrollbar for Firefox    
           }}>
             <TaskInformation task={task} />
             {allowComments && (
-              <CommentSection task={task} />
+              <CommentSection task={task} user={user} />
             )}
 
           </GridItem>

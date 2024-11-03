@@ -12,6 +12,7 @@ import {
   Switch,
   Text,
   useColorModeValue,
+  Select
 } from "@chakra-ui/react";
 // Assets
 import BgSignUp from "assets/img/BgSignUp.png";
@@ -31,6 +32,7 @@ const SignupSchema = Yup.object().shape({
   phone_number: Yup.number()
     .required('Phone number is required')
     .positive('Phone number must be a positive '),
+  role: Yup.string().required('Select a role.'),
   email: Yup.string()
     .email('Invalid email address')
     .required('Email is required'),
@@ -108,6 +110,7 @@ function SignUp() {
               last_name: '',
               phone_number: '',
               password: '',
+              role: ""
             }}
             validationSchema={SignupSchema}
             onSubmit={(values) => handleSignup(values)}
@@ -137,7 +140,7 @@ function SignUp() {
                       <Input {...field} fontSize='sm' borderRadius='15px' placeholder="Email" mb='24px' size='lg' />
                     )}
                   </Field>
-                  {errors.email&& touched.email ? <Text color="red.500">{errors.email}</Text> : null}
+                  {errors.email && touched.email ? <Text color="red.500">{errors.email}</Text> : null}
 
 
                   <FormLabel ms='4px' fontSize='sm' fontWeight='normal'>Phone Number</FormLabel>
@@ -147,6 +150,20 @@ function SignUp() {
                     )}
                   </Field>
                   {errors.phone_number && touched.phone_number ? <Text color="red.500">{errors.phone_number}</Text> : null}
+
+
+                  <FormLabel ms='4px' fontSize='sm' fontWeight='normal'>Role</FormLabel>
+                  <Field name="role">
+                    {({ field }) => (
+                      <Select {...field} fontSize='sm' borderRadius='15px' placeholder='Select role' mb='24px' size='lg'>
+                        <option value="admin">Admin - Create and Assign Tasks</option>
+                        <option value="agent">Agent - Assign Tasks Only</option>
+                        <option value="author">Author - Create Tasks Only</option>
+                      </Select>
+                    )}
+                  </Field>
+                  {errors.role && touched.role ? <Text color="red.500">{errors.role}</Text> : null}
+
 
                   <FormLabel ms='4px' fontSize='sm' fontWeight='normal'>Password</FormLabel>
                   <Field name="password">

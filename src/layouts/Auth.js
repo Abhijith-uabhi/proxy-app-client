@@ -5,7 +5,7 @@ import Footer from 'components/Footer/Footer.js';
 import AuthNavbar from 'components/Navbars/AuthNavbar.js';
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import routes from 'routes';
+import RoutesConfig from 'routes';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
@@ -16,6 +16,8 @@ import { AUTH_TOKEN } from 'config/authConfig';
 export default function Pages(props) {
 
 	const token = localStorage.getItem(AUTH_TOKEN)
+
+	const routes = RoutesConfig()
 
 	const { ...rest } = props;
 	// ref for the wrapper div

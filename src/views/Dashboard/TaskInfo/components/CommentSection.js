@@ -3,7 +3,7 @@ import { Box, Heading, Input, Button, VStack, Text, HStack, Flex, Avatar, Link }
 import dayjs from "dayjs"
 import commentService from "../../../../services/commentService";
 
-const CommentSection = ({ task, }) => {
+const CommentSection = ({ task, user }) => {
 
   console.log("THe task is", task);
 
@@ -30,6 +30,11 @@ const CommentSection = ({ task, }) => {
       const newCommentData = {
         task_id: task._id,
         comment: newComment,
+        sender: {
+          user_id: user._id,
+          first_name: user.first_name,
+          last_name: user.last_name
+        },
         ...parentCommentId && { parent_id: parentCommentId }, // Set parent_id if it's a reply, else null
       };
 
@@ -57,6 +62,8 @@ const CommentSection = ({ task, }) => {
   const fetchComments = async (parent_id) => {
     try {
       const result = await commentService.getcomments(task?._id, parent_id)
+      console.log("THE FETCHED COMMENST IS ",result);
+      
       if (result.data) {
         if (!parent_id) {
           setComments(result.data)
@@ -102,14 +109,14 @@ const CommentSection = ({ task, }) => {
   const handleHideReply = async (commentId) => {
     try {
       console.log("YES IT IS WORKING");
-      
+
       setShowReplies((prev) => ({
         ...prev,
         [commentId]: false
       }))
-      const updatedComents = comments.filter((item) =>  item.parent_id !== commentId )
-      console.log("the updated comments",updatedComents);
-      
+      const updatedComents = comments.filter((item) => item.parent_id !== commentId)
+      console.log("the updated comments", updatedComents);
+
       setComments(updatedComents)
     } catch (error) {
       console.log("ERROR HANDLE HIDE REPLY", error);
@@ -126,10 +133,10 @@ const CommentSection = ({ task, }) => {
       .map((comment) => (
         <Box key={comment.id} w="100%" pl={parentId ? 8 : 4} borderLeft={parentId ? "none" : "1px"} borderColor="gray.200" mt={2}>
           <Flex align="start">
-            <Avatar name={comment && comment.sendBy[0]?.first_name} />
+            <Avatar name={comment && comment.sender?.first_name} />
             <Box pl={3}>
               <Flex align="center" >
-                <Text fontWeight="bold" fontSize="md">{comment.sendBy[0].first_name}</Text>
+                <Text fontWeight="bold" fontSize="md">{comment.sender.first_name}</Text>
                 <Text fontSize="sm" ml={2}>
                   {comment.comment}
                 </Text>
@@ -139,7 +146,7 @@ const CommentSection = ({ task, }) => {
                 <Text fontSize="sm" color="gray.500" pl={2}>
                   {dayjs.unix(comment.created_at).fromNow()}
                 </Text>Ï
-                <Button size="xs" mt={2} onClick={() => handleReply(comment.sendBy, comment._id)}>
+                <Button size="xs" mt={2} onClick={() => handleReply(comment.sender, comment._id)}>
                   Reply
                 </Button>
 
