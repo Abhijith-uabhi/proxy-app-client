@@ -38,9 +38,10 @@ export default function Dashboard(props) {
 	const dispatch = useDispatch()
 
 	const { user, token } = useSelector((state) => state.auth)
-	
+
 	const routes = RoutesConfig();
 
+	console.log("THE ROUTES IS", routes);
 
 
 
@@ -51,7 +52,7 @@ export default function Dashboard(props) {
 	useEffect(() => {
 		if (user)
 			if (user.role === "admin") {
-				setNavRoutes(navigationConfig.admin)       
+				setNavRoutes(navigationConfig.admin)
 			} else if (user.role === "agent") {
 				setNavRoutes(navigationConfig.agent)
 			} else {

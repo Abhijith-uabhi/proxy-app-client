@@ -31,6 +31,7 @@ const AssigneeList = ({ task, fetchTask }) => {
     const [assigners, setAssigners] = useState([])
     const [showConfirmModal, setShowConfirmModal] = useState(false)
     const [selectedAssigner, setSelectedAssigner] = useState()
+    const [showAlert, setShowAlert] = useState(false)
 
 
     useEffect(() => {
@@ -54,21 +55,21 @@ const AssigneeList = ({ task, fetchTask }) => {
     const handleApprove = async () => {
         try {
             const volunteerId = task.volunteer_id ? null : selectedAssigner._id;
-            const res = await taskService.updateTask(task._id, { volunteer_id: volunteerId }, volunteerId ? null : "remove_volunteer");
+            const res = await taskService.updateTask(task._id, { volunteer_id: volunteerId, status: "ASSIGNED" }, volunteerId ? null : "remove_volunteer");
 
             if (res.data) {
-
-                <CustomAlert
-                    status='success'
-                    description={`Successfully ${task.volunteer_id ? 'unassigned' : `assigned ${selectedAssigner.first_name} ${selectedAssigner.last_name}`} for this task`}
-                />
+                setShowAlert(true)
                 await fetchTask()
             }
+
+            setTimeout(() => {
+                setShowAlert(false)
+            },2000);
 
             setShowConfirmModal(false);
         } catch (error) {
             console.error("Error assigning the volunteer:", error);
-        }
+        } 
     }
 
 
@@ -133,7 +134,10 @@ const AssigneeList = ({ task, fetchTask }) => {
                 handleConfirm={handleApprove}
 
             />}
-
+            {showAlert && <CustomAlert
+                status='success'
+                description={`Successfully ${task.volunteer_id ? 'unassigned' : `assigned ${selectedAssigner.first_name} ${selectedAssigner.last_name}`} for this task`}
+            />}
         </>
 
     );
