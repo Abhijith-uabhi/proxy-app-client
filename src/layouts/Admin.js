@@ -19,7 +19,7 @@ import PanelContainer from '../components/Layout/PanelContainer';
 import PanelContent from '../components/Layout/PanelContent';
 import { AUTH_TOKEN } from 'config/authConfig';
 import SignIn from 'views/Auth/SignIn';
-import { socket } from 'connection/socket';
+import { socket } from "../connection/socket";
 import { useDispatch, useSelector } from 'react-redux';
 import userService from '../services/userService';
 import { authenticated } from '../store/slices/authSlice';
@@ -49,8 +49,13 @@ export default function Dashboard(props) {
 		getUser()
 	}, [token])
 
+
 	useEffect(() => {
-		if (user)
+
+
+		if (user) {
+
+			socket.emit("join_room", { user_id: user._id })
 			if (user.role === "admin") {
 				setNavRoutes(navigationConfig.admin)
 			} else if (user.role === "agent") {
@@ -59,8 +64,13 @@ export default function Dashboard(props) {
 				setNavRoutes(navigationConfig.author)
 			}
 
+
+		}
+
 	}, [user])
 
+
+	
 
 
 	const getUser = async () => {

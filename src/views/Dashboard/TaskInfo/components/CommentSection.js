@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Box, Heading, Input, Button, VStack, Text, HStack, Flex, Avatar, Link } from "@chakra-ui/react";
 import dayjs from "dayjs"
 import commentService from "../../../../services/commentService";
+import { socket } from "connection/socket";
 
 const CommentSection = ({ task, user }) => {
 
@@ -93,6 +94,12 @@ const CommentSection = ({ task, user }) => {
     inputRef.current.focus(); // Focus the input
   };
 
+  useEffect(()=>{
+socket.on("room_message",(data)=>{
+  console.log("yes got the socket event here",data);
+  
+})
+  },[])
 
   const handleViewReply = async (commentId) => {
     try {
