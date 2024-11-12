@@ -37,11 +37,12 @@ import { useLocation } from "react-router-dom/cjs/react-router-dom";
 import navigationConfig from 'config/navigationConfig';
 import { logout } from "../../store/slices/authSlice";
 import { timeAgo } from "utils/timeFormatter";
+import userService from "services/userService";
 
 
 export default function HeaderLinks(props) {
   const { variant, children, fixed, secondary, onOpen, ...rest } = props;
-  const [notifications, setNotifications] = useState()
+  const [notifications, setNotifications] = useState([])
   const [routes, setRoutes] = useState([])
 
 
@@ -60,29 +61,20 @@ export default function HeaderLinks(props) {
   }
   const dispatch = useDispatch()
   const { user } = useSelector((state) => state.auth)
-  
-  useEffect(() => {
-    const savedNotifications = JSON.parse(localStorage.getItem("notifications"));
-    if (savedNotifications) {
-      setNotifications(savedNotifications);
+
+  const handleNotificationEvent = (data) => {
+    try {
+      setNotifications((prevNotifications) => {
+        return [...prevNotifications, data];
+      });
+    } catch (error) {
+
     }
+  }
 
+  useEffect(() => {
     // Listen to the "task_notification" event
-    socket.on("task_notification", (data) => {
-      console.log("TASK NOTIFICATION RECEIVED:", data);
-
-      let updatedNotifications;
-      if (notifications) {
-        updatedNotifications = [...notifications, data];
-      } else {
-        updatedNotifications = [data];
-      }
-
-      // Update state and localStorage
-      setNotifications(updatedNotifications);
-      localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
-    });
-
+    socket.on("task_notification", handleNotificationEvent);
     // Cleanup listener to avoid duplicate events
     return () => {
       socket.off("task_notification");
@@ -92,15 +84,21 @@ export default function HeaderLinks(props) {
   // Logic to clear notifications when navigating to "/admin/tasks"
   useEffect(() => {
     if (location.pathname === "/admin/tasks") {
-      localStorage.removeItem("notifications");
       setNotifications([]); // Ensure notifications are cleared in the UI
+      if (user.notifications.length) {
+        userService.deletUserNotifications()
+      }
     }
   }, [location]);
 
 
 
   useEffect(() => {
-    if (user)
+    if (user) {
+
+      if (user.notifications?.length) {
+        setNotifications(user.notifications);
+      }
       if (user.role === "admin") {
         setRoutes(navigationConfig.admin)
       } else if (user.role === "agent") {
@@ -108,14 +106,14 @@ export default function HeaderLinks(props) {
       } else {
         setRoutes(navigationConfig.author)
       }
+    }
 
   }, [user])
 
   const handleSignout = async () => {
     try {
-      localStorage.removeItem(AUTH_TOKEN);
-      localStorage.removeItem("notifications")
       dispatch(logout())
+      localStorage.removeItem(AUTH_TOKEN)
     } catch (error) {
       console.log("ERROR HANDLIG THE SIGN OUT", error);
 

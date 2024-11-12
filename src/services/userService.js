@@ -29,4 +29,14 @@ userService.getAllUsers = (data) => {
     )
 }
 
+userService.deletUserNotifications=()=>{
+    return (
+        api({
+            url: `${basePath}/notifications/delete`,
+            method: "delete",
+
+        })
+    )
+}
+
 export default userService
