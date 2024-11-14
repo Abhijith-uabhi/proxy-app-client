@@ -19,6 +19,7 @@ const Header = ({
   tabs,
 }) => {
   const [showEditModal, setShowEditModal] = useState(false)
+  const [modalMode,setModalMode]=useState()
   // Chakra color mode
   const textColor = useColorModeValue("gray.700", "white");
   const borderProfileColor = useColorModeValue(
@@ -98,7 +99,7 @@ const Header = ({
             <Flex
               direction={{ sm: "column", lg: "row" }}
               w={{ sm: "100%", md: "50%", lg: "auto" }}>
-              <Button p='0px' bg='transparent' _hover={{ bg: "none" }} onClick={() => { setShowEditModal(true) }}>
+              <Button p='0px' bg='transparent' _hover={{ bg: "none" }} onClick={() => { setShowEditModal(true) ,setModalMode("edit_profile") }}>
                 <Flex
                   align='center'
                   w={{ sm: "100%", lg: "135px" }}
@@ -119,7 +120,7 @@ const Header = ({
                   </Text>
                 </Flex>
               </Button>
-              {/* <Button p='0px' bg='transparent' _hover={{ bg: "none" }}>
+              <Button p='0px' bg='transparent' _hover={{ bg: "none" }}  onClick={() => { setShowEditModal(true) ,setModalMode("change_password") }}>
               <Flex
                 align='center'
                 w={{ lg: "135px" }}
@@ -138,7 +139,7 @@ const Header = ({
                 </Text>
               </Flex>
             </Button>
-            <Button p='0px' bg='transparent' _hover={{ bg: "none" }}>
+            {/* <Button p='0px' bg='transparent' _hover={{ bg: "none" }}>
               <Flex
                 align='center'
                 w={{ lg: "135px" }}
@@ -161,7 +162,7 @@ const Header = ({
         </Box>
       </Box>
       {showEditModal && (
-        <EditProfileModal />
+        <EditProfileModal mode={modalMode}  open={showEditModal} onClose={setShowEditModal} />
       )}
     </>
   );

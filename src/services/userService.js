@@ -39,4 +39,16 @@ userService.deletUserNotifications=()=>{
     )
 }
 
+
+userService.editProfile=(id,values)=>{
+    return (
+        api({
+            url:`${basePath}/update/${id}`,
+            method:"put",
+            data:values
+            
+        })
+    )
+}
+
 export default userService

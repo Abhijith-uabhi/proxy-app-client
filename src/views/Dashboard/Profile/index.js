@@ -40,12 +40,13 @@ function Profile() {
           //   name: "OVERVIEW",
           //   icon: <FaCube w='100%' h='100%' />,
           // },
-          // {
-          //   name: "TEAMS",
-          //   icon: <IoDocumentsSharp w='100%' h='100%' />,
-          // },
+        
           {
             name: "EDIT PROFILE",
+            icon: <FaPenFancy w='100%' h='100%' />,
+          },
+          {
+            name: "CHANGE PASSWORD",
             icon: <FaPenFancy w='100%' h='100%' />,
           },
         ]}
