@@ -63,8 +63,8 @@ const CommentSection = ({ task, user }) => {
   const fetchComments = async (parent_id) => {
     try {
       const result = await commentService.getcomments(task?._id, parent_id)
-      console.log("THE FETCHED COMMENST IS ",result);
-      
+      console.log("THE FETCHED COMMENST IS ", result);
+
       if (result.data) {
         if (!parent_id) {
           setComments(result.data)
@@ -94,12 +94,13 @@ const CommentSection = ({ task, user }) => {
     inputRef.current.focus(); // Focus the input
   };
 
-  useEffect(()=>{
-socket.on("room_message",(data)=>{
-  console.log("yes got the socket event here",data);
-  
-})
-  },[])
+  useEffect(() => {
+    socket.on("room_message", (data) => {
+      console.log("yes got the socket event here", data);
+      fetchComments()
+
+    })
+  }, [])
 
   const handleViewReply = async (commentId) => {
     try {

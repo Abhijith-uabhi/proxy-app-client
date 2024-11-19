@@ -10,8 +10,9 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 function TaskPage() {
   const location = useLocation()
   const [listType, setListType] = useState()
-  const history = useHistory()
+  const [captions, setCaptions] = useState(["Task Name", "Description", "Priority", "Due_date", "Actions",])
 
+  const history = useHistory()
 
   useEffect(() => {
     if (location.pathname === '/admin/tasks') {
@@ -21,12 +22,20 @@ function TaskPage() {
     }
     else if (location.pathname === "/admin/your/tasks") {
       console.log("WORKING2");
-
       setListType("user_tasks")
+      setCaptions((prev) => {
+        const updatedCaptions = [...prev];
+        if (!updatedCaptions.includes("Status")) {
+          // Insert "Status" before the last column ("Actions")
+          updatedCaptions.splice(updatedCaptions.length - 1, 0, "Status");
+        }
+  
+        return updatedCaptions;
+      });
     }
     else if (location.pathname === "/admin/tasks/assigned") {
       console.log("WORKING3");
-      
+
       setListType("assigned_tasks")
     }
   }, [location])
@@ -40,7 +49,7 @@ function TaskPage() {
       <Tasks
         listType={listType}
         title={"Tasks"}
-        captions={["Task Name", "Description", "Priority", "Due_date", "Actions"]}
+        captions={captions}
       />
 
     </Flex>

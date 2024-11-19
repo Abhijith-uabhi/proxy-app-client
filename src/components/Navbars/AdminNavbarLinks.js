@@ -85,7 +85,7 @@ export default function HeaderLinks(props) {
   useEffect(() => {
     if (location.pathname === "/admin/tasks") {
       setNotifications([]); // Ensure notifications are cleared in the UI
-      if (user.notifications.length) {
+      if (user?.notifications?.length) {
         userService.deletUserNotifications()
       }
     }

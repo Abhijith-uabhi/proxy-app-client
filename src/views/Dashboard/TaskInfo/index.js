@@ -10,6 +10,7 @@ import taskService from "../../../services/taksService";
 import AssigneeList from "./components/Assignees";
 import { position } from "stylis";
 import { useSelector } from "react-redux";
+import RatingModal from "components/Modals/ratingModal";
 
 
 function TaskInfo() {
@@ -17,7 +18,10 @@ function TaskInfo() {
   const { id } = useParams();
   const { user } = useSelector((state) => state.auth)
   const [allowComments, setAllowComments] = useState(false)
-  
+  const [showRatingModal,setShowratingModal]=useState(false)
+
+
+
   useEffect(() => {
     fetchTask()
   }, [])
@@ -28,8 +32,12 @@ function TaskInfo() {
       setTask(task.data)
       if (task.data.created_by === user._id || task.data.volunteer_id === user._id) {
         console.log("YES IT IS");
-        
+
         setAllowComments(true)
+        if(task.data.status==="COMPLETED"){
+          setShowratingModal(true)
+        }
+        
       }
 
     } catch (error) {
@@ -37,6 +45,9 @@ function TaskInfo() {
 
     }
   }
+
+  console.log("TWGEIGFWEHRW",showRatingModal);
+  
 
   return (
     <Flex direction='column' pt={{ base: "120px", md: "75px" }}>
@@ -54,13 +65,13 @@ function TaskInfo() {
 
           </GridItem>
           <GridItem >
-            <DetailsSidebar task={task} isTaskOwner={task?.created_by === user?._id }   />
+            <DetailsSidebar task={task} isTaskOwner={task?.created_by === user?._id} />
             {task?.created_by === user?._id ? <AssigneeList task={task} fetchTask={fetchTask} /> : <></>}
 
           </GridItem>
         </Grid>
       </Card>
-
+      <RatingModal isOpen={showRatingModal} onClose={setShowratingModal}/>
     </Flex>
 
 

@@ -21,7 +21,7 @@ import taskService from "services/taksService";
 
 
 function TaskRow(props) {
-  const { title, description, priority, due_date, listType, task_id, updateTask, deleteTask, fetchTasks } = props;
+  const { title, description, priority, due_date, listType, task_id, updateTask, deleteTask, fetchTasks, status } = props;
   const textColor = useColorModeValue("gray.700", "white");
   const bgStatus = useColorModeValue("gray.400", "#1a202c");
   const colorStatus = useColorModeValue("white", "gray.400");
@@ -31,7 +31,7 @@ function TaskRow(props) {
   const [alert, setAlert] = useState({ show: false, status: '', description: '' });
 
 
-  const handleOk = async () => {
+const handleOk = async () => {
     try {
       if (listType === "user_tasks") {
         console.log((task_id));
@@ -57,21 +57,20 @@ function TaskRow(props) {
         setAlert({ show: true, status: 'error', description: 'Failed to assign the task' });
 
       }
-
-
-
     }
-  }
+ }
 
 
-  const handleEditTask = async () => {
+const handleEditTask = async () => {
     try {
       await updateTask({ title, description, priority, due_date: dayjs(due_date).format('YYYY-MM-DD') }, task_id)
     } catch (error) {
       console.log("Error editing a task", error);
 
     }
-  }
+ }
+
+
 
   return (
     <>
@@ -110,6 +109,12 @@ function TaskRow(props) {
             {dayjs(due_date).format("YYYY-MM-DD")}
           </Text>
         </Td>
+        {listType === "user_tasks" ? (<>
+          <Td>
+            <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
+              {status}
+            </Text>
+          </Td></>) : (<></>)}
         <Td>
           <Flex
             direction={{ sm: "column", md: "row" }}
