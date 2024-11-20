@@ -79,7 +79,8 @@ const handleEditTask = async () => {
           <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
             {listType !== "all_tasks" ? <Link textDecoration="underline" onClick={(() => {
               history.push({
-                pathname: `/admin/task/info/${task_id}`  // Passing data as state
+                pathname: `/admin/task/info/${task_id}`,  // Passing data as state
+                state: { type: listType }
               });
             })}>
               {title}

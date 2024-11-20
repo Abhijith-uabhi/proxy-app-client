@@ -11,6 +11,9 @@ import AssigneeList from "./components/Assignees";
 import { position } from "stylis";
 import { useSelector } from "react-redux";
 import RatingModal from "components/Modals/ratingModal";
+import { useLocation } from "react-router-dom/cjs/react-router-dom";
+import userService from "services/userService";
+
 
 
 function TaskInfo() {
@@ -18,7 +21,8 @@ function TaskInfo() {
   const { id } = useParams();
   const { user } = useSelector((state) => state.auth)
   const [allowComments, setAllowComments] = useState(false)
-  const [showRatingModal,setShowratingModal]=useState(false)
+  const [showRatingModal, setShowratingModal] = useState(false)
+  const [ratingData, setratingModalData] = useState({ title: "", description: "" })
 
 
 
@@ -28,26 +32,61 @@ function TaskInfo() {
 
   const fetchTask = async () => {
     try {
-      const task = await taskService.getSingleTask(id)
-      setTask(task.data)
-      if (task.data.created_by === user._id || task.data.volunteer_id === user._id) {
-        console.log("YES IT IS");
+      const task = await taskService.getSingleTask(id);
+      setTask(task.data);
 
-        setAllowComments(true)
-        if(task.data.status==="COMPLETED"){
-          setShowratingModal(true)
+      if (task.data.created_by === user._id) {
+        // Allow comments if the user created the task
+        setAllowComments(true);
+
+        if (task.data.status === "COMPLETED") {
+
+          setratingModalData({
+            ratedTo: task.data.volunteer_id,
+            rating_type: "assigned",
+            title: "Rate the Volunteer",
+            description: `The volunteer ${task.data.assignedBy[0].first_name} ${task.data.assignedBy[0].last_name} successfully completed your task. Share your feedback by rating their performance.`,
+          });
+          setShowratingModal(true);
+
         }
-        
-      }
+      } else if (task.data.volunteer_id === user._id) {
+        // Allow comments if the user is the volunteer
+        setAllowComments(true);
 
+        if (task.data.status === "COMPLETED") {
+
+          setratingModalData({
+            ratedTo: task.data.created_by,
+            rating_type: "created",
+            title: "Rate the Task Creator",
+            description: `Please rate your experience working with the task creator ${task.data.createdBy[0].first_name} ${task.data.createdBy[0].last_name} for this task.`,
+          });
+          setShowratingModal(true);
+        }
+      }
     } catch (error) {
-      console.log("ERROR FETCHING THE TASK", error);
+      console.error("Error fetching the task:", error);
+    }
+  };
+
+  const onsubmitRating = async (rating) => {
+    try {
+      const payload = {
+        rating,
+        ratedTo: ratingData?.ratedTo,
+        rating_type: ratingData.rating_type
+      }
+      console.log("THE PAYLOAD IS", payload);
+
+      const res = await userService.submitRating(payload)
+    } catch (error) {
+      console.log("ERROR SUBMITTING THE RATING", error);
 
     }
   }
 
-  console.log("TWGEIGFWEHRW",showRatingModal);
-  
+
 
   return (
     <Flex direction='column' pt={{ base: "120px", md: "75px" }}>
@@ -71,7 +110,7 @@ function TaskInfo() {
           </GridItem>
         </Grid>
       </Card>
-      <RatingModal isOpen={showRatingModal} onClose={setShowratingModal}/>
+      <RatingModal isOpen={showRatingModal} onClose={setShowratingModal} content={ratingData} onSubmitRating={onsubmitRating} />
     </Flex>
 
 

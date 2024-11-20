@@ -51,4 +51,15 @@ userService.editProfile=(id,values)=>{
     )
 }
 
+userService.submitRating=(values)=>{
+    return (
+        api({
+            url:`${basePath}/rating`,
+            method:"put",
+            data:values
+            
+        })
+    )
+}
+
 export default userService
