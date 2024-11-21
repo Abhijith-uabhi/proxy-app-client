@@ -10,7 +10,7 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 function TaskPage() {
   const location = useLocation()
   const [listType, setListType] = useState()
-  const [captions, setCaptions] = useState(["Task Name", "Description", "Priority", "Due_date", "Actions",])
+  const [captions, setCaptions] = useState(["Task Name", "Description", "Priority", "location", "Due_date", "Actions"])
 
   const history = useHistory()
 
@@ -29,7 +29,7 @@ function TaskPage() {
           // Insert "Status" before the last column ("Actions")
           updatedCaptions.splice(updatedCaptions.length - 1, 0, "Status");
         }
-  
+
         return updatedCaptions;
       });
     }

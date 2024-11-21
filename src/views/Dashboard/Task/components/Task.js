@@ -159,6 +159,7 @@ const Tasks = ({ title, captions, listType }) => {
                                     priority={row.priority}
                                     due_date={row.due_date}
                                     status={row.status}
+                                    location={row.location}
                                 />
                             );
                         })}

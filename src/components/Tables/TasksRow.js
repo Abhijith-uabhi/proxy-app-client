@@ -21,7 +21,7 @@ import taskService from "services/taksService";
 
 
 function TaskRow(props) {
-  const { title, description, priority, due_date, listType, task_id, updateTask, deleteTask, fetchTasks, status } = props;
+  const { title, description, priority, due_date, listType, task_id, updateTask, deleteTask, fetchTasks, status, location } = props;
   const textColor = useColorModeValue("gray.700", "white");
   const bgStatus = useColorModeValue("gray.400", "#1a202c");
   const colorStatus = useColorModeValue("white", "gray.400");
@@ -31,10 +31,9 @@ function TaskRow(props) {
   const [alert, setAlert] = useState({ show: false, status: '', description: '' });
 
 
-const handleOk = async () => {
+  const handleOk = async () => {
     try {
       if (listType === "user_tasks") {
-        console.log((task_id));
         await deleteTask(task_id)
       } else {
         let type
@@ -58,17 +57,17 @@ const handleOk = async () => {
 
       }
     }
- }
+  }
 
 
-const handleEditTask = async () => {
+  const handleEditTask = async () => {
     try {
-      await updateTask({ title, description, priority, due_date: dayjs(due_date).format('YYYY-MM-DD') }, task_id)
+      await updateTask({ title, description, priority, due_date: dayjs(due_date).format('YYYY-MM-DD'), location }, task_id)
     } catch (error) {
       console.log("Error editing a task", error);
 
     }
- }
+  }
 
 
 
@@ -104,6 +103,11 @@ const handleEditTask = async () => {
           >
             {priority}
           </Badge>
+        </Td>
+        <Td>
+          <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
+            {location}
+          </Text>
         </Td>
         <Td>
           <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">

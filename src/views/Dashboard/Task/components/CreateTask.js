@@ -17,7 +17,14 @@ const validationSchemaStep1 = Yup.object().shape({
 const validationSchemaStep2 = Yup.object().shape({
   priority: Yup.string().required('Priority is required'),
   due_date: Yup.date().required('Due Date is required'),
+  location: Yup.string().required("Location is required")
 });
+
+const places = [
+  { id: 1, location: "New York" },
+  { id: 2, location: "Paris" },
+  { id: 3, location: "Agra" },
+];
 
 const TaskForm = () => {
   const [step, setStep] = useState(1);
@@ -27,6 +34,7 @@ const TaskForm = () => {
     description: '',
     priority: '',
     due_date: '',
+    location:''
   })
   const location = useLocation()
   const [alert, setAlert] = useState({ show: false, status: '', description: '' });
@@ -39,6 +47,7 @@ const TaskForm = () => {
 
   }, [location])
 
+console.log("the initial values i s",initialValues);
 
   const handleNext = (values) => {
     console.log(validationSchemaStep1);
@@ -147,6 +156,23 @@ const TaskForm = () => {
                     </Field>
                     <Text color="red.500">
                       <ErrorMessage name="priority" />
+                    </Text>
+                  </FormControl>
+
+                  <FormControl isInvalid={errors.location && touched.location}>
+                    <FormLabel>Location</FormLabel>
+                    <Field name="location">
+                      {({ field }) => (
+                        <Select {...field} placeholder="Select location">
+                          {places.map((place) => (
+                            <option value={place.location}>{place.location}</option>
+                          ))}
+
+                        </Select>
+                      )}
+                    </Field>
+                    <Text color="red.500">
+                      <ErrorMessage name="location" />
                     </Text>
                   </FormControl>
 
