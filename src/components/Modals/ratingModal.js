@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { StarIcon } from "@chakra-ui/icons";
 
-const RatingModal = ({isOpen,onClose, onSubmitRating,content }) => {
+const RatingModal = ({ isOpen, onClose, onSubmitRating, content }) => {
   const [rating, setRating] = useState(0);
 
   const handleRating = (value) => setRating(value);
@@ -26,9 +26,9 @@ const RatingModal = ({isOpen,onClose, onSubmitRating,content }) => {
 
   return (
     <>
-    
+
       {/* Rating Modal */}
-      <Modal isOpen={isOpen} onClose={()=>onClose(false)} size={"lg"}>
+      <Modal isOpen={isOpen} onClose={() => onClose(false)} size={"lg"}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{content.title}</ModalHeader>
@@ -54,8 +54,8 @@ const RatingModal = ({isOpen,onClose, onSubmitRating,content }) => {
             <Button colorScheme="blue" mr={3} onClick={submitRating}>
               Submit
             </Button>
-            <Button variant="ghost" onClick={()=>onClose(false)}>
-              Cancel
+            <Button variant="ghost" onClick={() => onClose(false)}>
+              Not Now
             </Button>
           </ModalFooter>
         </ModalContent>

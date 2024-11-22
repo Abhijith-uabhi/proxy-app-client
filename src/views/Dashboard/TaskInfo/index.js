@@ -41,13 +41,21 @@ function TaskInfo() {
 
         if (task.data.status === "COMPLETED") {
 
-          setratingModalData({
-            ratedTo: task.data.volunteer_id,
-            rating_type: "assigned",
-            title: "Rate the Volunteer",
-            description: `The volunteer ${task.data.assignedBy[0].first_name} ${task.data.assignedBy[0].last_name} successfully completed your task. Share your feedback by rating their performance.`,
-          });
-          setShowratingModal(true);
+          const isRated = task.data.assignedBy[0].assigned_task_ratings?.length &&
+            task.data.assignedBy[0].assigned_task_ratings.find((item) => item.task_name === task.data.title && item.ratingBy === user._id)
+            console.log("CHECK THE TASK IS ALREADY RATED", isRated);
+
+          if (!isRated) {
+            setratingModalData({
+              ratedTo: task.data.volunteer_id,
+              rating_type: "assigned",
+              title: "Rate the Volunteer",
+              description: `The volunteer ${task.data.assignedBy[0].first_name} ${task.data.assignedBy[0].last_name} successfully completed your task. Share your feedback by rating their performance.`,
+            });
+            setShowratingModal(true);
+
+          }
+
 
         }
       } else if (task.data.volunteer_id === user._id) {
@@ -55,14 +63,21 @@ function TaskInfo() {
         setAllowComments(true);
 
         if (task.data.status === "COMPLETED") {
+          const isRated = task.data.createdBy[0]?.created_task_ratings?.length &&
+            task.data.createdBy[0].created_task_ratings.find((item) => item.task_name === task.data.title && item.ratingBy === user._id)
+          console.log("CHECK THE TASK IS ALREADY RATED", isRated);
 
-          setratingModalData({
-            ratedTo: task.data.created_by,
-            rating_type: "created",
-            title: "Rate the Task Creator",
-            description: `Please rate your experience working with the task creator ${task.data.createdBy[0].first_name} ${task.data.createdBy[0].last_name} for this task.`,
-          });
-          setShowratingModal(true);
+          if (!isRated) {
+            setratingModalData({
+              ratedTo: task.data.created_by,
+              rating_type: "created",
+              title: "Rate the Task Creator",
+              description: `Please rate your experience working with the task creator ${task.data.createdBy[0].first_name} ${task.data.createdBy[0].last_name} for this task.`,
+            });
+            setShowratingModal(true);
+          }
+
+
         }
       }
     } catch (error) {
@@ -75,9 +90,10 @@ function TaskInfo() {
       const payload = {
         rating,
         ratedTo: ratingData?.ratedTo,
-        rating_type: ratingData.rating_type
+        rating_type: ratingData.rating_type,
+        task_name: task.title
       }
-      console.log("THE PAYLOAD IS", payload);
+      console.log("THE PAYLOAD IS", payload, task);
 
       const res = await userService.submitRating(payload)
     } catch (error) {

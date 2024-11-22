@@ -36,21 +36,8 @@ const AssigneeList = ({ task, fetchTask }) => {
 
     useEffect(() => {
         if (task)
-            fetchAssigners()
+            setAssigners(task.assignees)
     }, [task])
-
-    const fetchAssigners = async () => {
-        try {
-            if (task.assignees.length) {
-                const result = await userService.getAllUsers({ user_ids: task.assignees })
-                setAssigners(result.data)
-            }
-        } catch (error) {
-            console.log("ERROR FETCHING THE ASSIGNERS", error);
-
-        }
-    }
-
 
     const handleApprove = async () => {
         try {
