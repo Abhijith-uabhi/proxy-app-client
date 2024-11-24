@@ -6,14 +6,15 @@ const basePath = "/api/v1/user"
 const userService = {}
 
 
-userService.getUser = () => {
+userService.getUser = (user_id) => {
+    let url=`${basePath}/get`
+    if(user_id){
+       url= `${basePath}/get?id=${user_id}`
+    }
     return (
         api({
-            url: `${basePath}/get`,
+            url,
             method: "get",
-
-
-
         })
     )
 }
@@ -29,7 +30,7 @@ userService.getAllUsers = (data) => {
     )
 }
 
-userService.deletUserNotifications=()=>{
+userService.deletUserNotifications = () => {
     return (
         api({
             url: `${basePath}/notifications/delete`,
@@ -40,24 +41,24 @@ userService.deletUserNotifications=()=>{
 }
 
 
-userService.editProfile=(id,values)=>{
+userService.editProfile = (id, values) => {
     return (
         api({
-            url:`${basePath}/update/${id}`,
-            method:"put",
-            data:values
-            
+            url: `${basePath}/update/${id}`,
+            method: "put",
+            data: values
+
         })
     )
 }
 
-userService.submitRating=(values)=>{
+userService.submitRating = (values) => {
     return (
         api({
-            url:`${basePath}/rating`,
-            method:"put",
-            data:values
-            
+            url: `${basePath}/rating`,
+            method: "put",
+            data: values
+
         })
     )
 }

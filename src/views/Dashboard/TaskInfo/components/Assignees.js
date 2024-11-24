@@ -24,6 +24,7 @@ import { useSelector } from "react-redux";
 import ConfirmModal from "components/Modals/confirmModal";
 import taskService from "../../../../services/taksService";
 import CustomAlert from "components/Alerts/Alert";
+import UserInfoModal from "components/Modals/userInfoModal";
 
 const AssigneeList = ({ task, fetchTask }) => {
     // Chakra color mode
@@ -32,6 +33,7 @@ const AssigneeList = ({ task, fetchTask }) => {
     const [showConfirmModal, setShowConfirmModal] = useState(false)
     const [selectedAssigner, setSelectedAssigner] = useState()
     const [showAlert, setShowAlert] = useState(false)
+    const [showUserInfo, setShowUserInfo] = useState(false)
 
 
     useEffect(() => {
@@ -51,12 +53,12 @@ const AssigneeList = ({ task, fetchTask }) => {
 
             setTimeout(() => {
                 setShowAlert(false)
-            },2000);
+            }, 2000);
 
             setShowConfirmModal(false);
         } catch (error) {
             console.error("Error assigning the volunteer:", error);
-        } 
+        }
     }
 
 
@@ -102,7 +104,24 @@ const AssigneeList = ({ task, fetchTask }) => {
                                         alignSelf='center'>
                                         {task.volunteer_id === assignee._id ? "REMOVE" : "APPROVE"}
                                     </Text>
-                                </Button> : <></>
+                                </Button>
+                                <Button p='0px' bg='transparent' variant='no-hover' onClick={() => {
+                                    setShowUserInfo(true)
+                                    setSelectedAssigner(assignee)
+                                }}
+
+                                    isDisabled={!task.volunteer_id ? false : task.volunteer_id === assignee._id ? false : true} // Set this to true or false based on your logic
+
+                                >
+                                    <Text
+                                        fontSize='sm'
+                                        fontWeight='600'
+                                        color='teal.300'
+                                        alignSelf='center'>
+                                        VIEW PROFILE
+                                    </Text>
+                                </Button>
+
 
 
                             </Flex>
@@ -121,6 +140,7 @@ const AssigneeList = ({ task, fetchTask }) => {
                 handleConfirm={handleApprove}
 
             />}
+            {showUserInfo && <UserInfoModal isOpen={showUserInfo} onClose={setShowUserInfo} user={selectedAssigner} />}
             {showAlert && <CustomAlert
                 status='success'
                 description={`Successfully ${task.volunteer_id ? 'unassigned' : `assigned ${selectedAssigner.first_name} ${selectedAssigner.last_name}`} for this task`}
