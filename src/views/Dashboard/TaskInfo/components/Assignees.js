@@ -79,7 +79,8 @@ const AssigneeList = ({ task, fetchTask }) => {
                         {assigners.length ? assigners.map((assignee) => (
                             <Flex justifyContent='space-between' mb='21px'>
                                 <Flex align='center'>
-                                    <Avatar name={assignee?.first_name} />
+                                    <Avatar name={`${assignee?.first_name} ${assignee?.last_name}`}
+                                    />
                                     <Flex direction='column'>
                                         <Text fontSize='sm' color={textColor} fontWeight='bold' ml={3}>
                                             {assignee.first_name}{" "}{assignee.last_name}
