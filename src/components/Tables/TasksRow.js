@@ -18,10 +18,11 @@ import React, { useState } from "react";
 import { FaPencilAlt, FaTrashAlt, FaUserPlus } from "react-icons/fa";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import taskService from "services/taksService";
+import ReactPaginate from "react-paginate";
 
 
 function TaskRow(props) {
-  const { title, description, priority, due_date, listType, task_id, updateTask, deleteTask, fetchTasks, status, location } = props;
+  const { tasks, title, description, priority, due_date, listType, task_id, updateTask, deleteTask, fetchTasks, status, location } = props;
   const textColor = useColorModeValue("gray.700", "white");
   const bgStatus = useColorModeValue("gray.400", "#1a202c");
   const colorStatus = useColorModeValue("white", "gray.400");
@@ -29,6 +30,19 @@ function TaskRow(props) {
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const [modalDescription, setModalDescription] = useState("")
   const [alert, setAlert] = useState({ show: false, status: '', description: '' });
+
+  const [currentPage, setCurrentPage] = useState(0);
+  const tasksPerPage = 10;
+
+
+  const displayedTasks = tasks.slice(
+    currentPage * tasksPerPage,
+    (currentPage + 1) * tasksPerPage
+  );
+
+  const handlePageChange = (selectedPage) => {
+    setCurrentPage(selectedPage.selected);
+  };
 
 
   const handleOk = async () => {
@@ -73,51 +87,51 @@ function TaskRow(props) {
 
   return (
     <>
-      <Tr>
+      <Tr key={task.task_id}>
         <Td>
           <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
             {listType !== "all_tasks" ? <Link textDecoration="underline" onClick={(() => {
               history.push({
-                pathname: `/admin/task/info/${task_id}`,  // Passing data as state
+                pathname: `/admin/task/info/${task.task_id}`,  // Passing data as state
                 state: { type: listType }
               });
             })}>
-              {title}
-            </Link> : (title)}
+              {task.title}
+            </Link> : (task.title)}
 
           </Text>
         </Td>
 
         <Td>
           <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
-            {description}
+            {task.description}
           </Text>
         </Td>
         <Td>
           <Badge
-            bg={priority === "High" ? "red.400" : priority === "Medium" ? "green.400" : bgStatus}
+            bg={task.priority === "High" ? "red.400" : task.priority === "Medium" ? "green.400" : bgStatus}
             color={"white"}
             fontSize="16px"
             p="3px 10px"
             borderRadius="8px"
           >
-            {priority}
+            {task.priority}
           </Badge>
         </Td>
         <Td>
           <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
-            {location}
+            {task.location}
           </Text>
         </Td>
         <Td>
           <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
-            {dayjs(due_date).format("YYYY-MM-DD")}
+            {dayjs(task.due_date).format("YYYY-MM-DD")}
           </Text>
         </Td>
         {listType === "user_tasks" ? (<>
           <Td>
             <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
-              {status}
+              {task.status}
             </Text>
           </Td></>) : (<></>)}
         <Td>
@@ -179,6 +193,24 @@ function TaskRow(props) {
           </Flex>
         </Td>
       </Tr>
+
+      {tasks.length > 0 && (
+        <Flex justifyContent="center" mt="4">
+          <Button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}>
+            Previous
+          </Button>
+          <Text mx="2">Page {currentPage + 1}</Text>
+          <Button
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, Math.ceil(tasks.length / tasksPerPage) - 1))
+            }
+          >
+            Next
+          </Button>
+        </Flex>
+
+      )}
+
       {
         showConfirmModal && (
           <ConfirmModal
