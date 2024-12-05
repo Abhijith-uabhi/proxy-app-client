@@ -127,12 +127,12 @@ function SignIn() {
                       {msg => <Text color="red.500">{msg}</Text>}
                     </ErrorMessage>
 
-                    <FormControl display='flex' alignItems='center'>
+                    {/* <FormControl display='flex' alignItems='center'>
                       <Switch id='remember-login' colorScheme='teal' me='10px' />
                       <FormLabel htmlFor='remember-login' mb='0' ms='1' fontWeight='normal'>
                         Remember me
                       </FormLabel>
-                    </FormControl>
+                    </FormControl> */}
 
                     <Button
                       fontSize='10px'
