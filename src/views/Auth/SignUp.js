@@ -25,6 +25,9 @@ import authService from "services/authService";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
 import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 import completeProfileImg from "../../assets/img/completeProfileImg.webp"
+import userService from "services/userService";
+import { AUTH_TOKEN } from "config/authConfig";
+import { useDispatch } from "react-redux";
 
 
 
@@ -35,10 +38,15 @@ const SignupSchema = Yup.object().shape({
   phone_number: Yup.number()
     .required('Phone number is required')
     .positive('Phone number must be a positive '),
-  role: Yup.string().required('Select a role.'),
   email: Yup.string()
     .email('Invalid email address')
     .required('Email is required'),
+
+
+});
+
+const PasswordSchema = Yup.object().shape({
+  role: Yup.string().required('Select a role.'),
   password: Yup.string()
     .min(6, 'Password must be at least 6 characters')
     .required('Password is required'),
@@ -53,13 +61,15 @@ function SignUp() {
   const bgColor = useColorModeValue("white", "gray.700");
   const bgIcons = useColorModeValue("teal.200", "rgba(255, 255, 255, 0.5)");
 
-  const [signUpsucces, setSignUpSucces] = useState(true)
+  const [signUpsucces, setSignUpSucces] = useState(false)
 
   const location = useLocation()
+  const dispatch=useDispatch()
 
   const queryParams = new URLSearchParams(location.search);
 
   const mode = queryParams.get("mode")
+  const profile_id = queryParams.get("id")
 
 
   // const queryParams=locatio
@@ -68,11 +78,16 @@ function SignUp() {
     try {
 
       console.log("Form Submitted", values);
-      const res = await authService.register(values)
-      if (res && !mode === "complete_profile") {
+
+      if (mode !== "complete_profile") {
+        const res = await authService.register(values)
         console.log("the res", res);
         setSignUpSucces(true)
         //  history.push("/auth/signin");
+      } else {
+        const res = await userService.editProfile(profile_id, values, mode)
+        localStorage.setItem(AUTH_TOKEN,res.data.token)
+        dispatch(loginSuccess(res.data))
       }
     } catch (error) {
       console.log("error ", error);
@@ -121,13 +136,18 @@ function SignUp() {
           boxShadow='0 20px 27px 0 rgb(0 0 0 / 5%)'>
           <Formik
             initialValues={{
-              first_name: '',
-              last_name: '',
-              phone_number: '',
-              password: '',
-              role: ""
+              ...!mode && {
+                first_name: '',
+                last_name: '',
+                phone_number: ''
+              },
+              ...mode && {
+                password: '',
+                role: ""
+              },
+
             }}
-            validationSchema={SignupSchema}
+            validationSchema={mode ? PasswordSchema : SignupSchema}
             onSubmit={(values) => handleSignup(values)}
           >
             {({ errors, touched }) => (
@@ -168,9 +188,9 @@ function SignUp() {
                     {errors.phone_number && touched.phone_number ? <Text color="red.500">{errors.phone_number}</Text> : null}
 
 
-                  </> : <div style={{paddingBottom:"10px"}}>
+                  </> : <>{signUpsucces ? <div style={{ paddingBottom: "10px" }}>
                     <img src={completeProfileImg} alt="complete profile" />
-                  </div>
+                  </div> : <></>}</>
                   }
 
                   {mode === "complete_profile" ? <>
