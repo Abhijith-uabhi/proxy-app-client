@@ -64,7 +64,7 @@ function SignUp() {
   const [signUpsucces, setSignUpSucces] = useState(false)
 
   const location = useLocation()
-  const dispatch=useDispatch()
+  const dispatch = useDispatch()
 
   const queryParams = new URLSearchParams(location.search);
 
@@ -83,11 +83,12 @@ function SignUp() {
         const res = await authService.register(values)
         console.log("the res", res);
         setSignUpSucces(true)
-        //  history.push("/auth/signin");
+
       } else {
         const res = await userService.editProfile(profile_id, values, mode)
-        localStorage.setItem(AUTH_TOKEN,res.data.token)
+        localStorage.setItem(AUTH_TOKEN, res.data.token)
         dispatch(loginSuccess(res.data))
+        history.push("/admin/dashboard");
       }
     } catch (error) {
       console.log("error ", error);

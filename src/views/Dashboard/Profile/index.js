@@ -4,19 +4,16 @@ import avatar4 from "assets/img/avatars/avatar4.png";
 import ProfileBgImage from "assets/img/ProfileBackground.png";
 import React, { useEffect, useState } from "react";
 import { FaCube, FaPenFancy } from "react-icons/fa";
-import { IoDocumentsSharp } from "react-icons/io5";
-import Conversations from "./components/Conversations";
 import Header from "./components/Header";
 import PlatformSettings from "./components/PlatformSettings";
 import ProfileInformation from "./components/ProfileInformation";
-import Projects from "./components/Projects";
 
 import userService from "../../../services/userService";
 import { useSelector } from "react-redux";
 
 function Profile() {
 
-  const { user } = useSelector((state)=>(state.auth))
+  const { user } = useSelector((state) => (state.auth))
 
   // Chakra color mode
   const textColor = useColorModeValue("gray.700", "white");
@@ -36,11 +33,8 @@ function Profile() {
         name={`${user?.first_name} ${user?.last_name}`}
         email={user?.email}
         tabs={[
-          // {
-          //   name: "OVERVIEW",
-          //   icon: <FaCube w='100%' h='100%' />,
-          // },
-        
+
+
           {
             name: "EDIT PROFILE",
             icon: <FaPenFancy w='100%' h='100%' />,
@@ -60,14 +54,14 @@ function Profile() {
           email={user?.email}
           location={"United States"}
         />
-           <PlatformSettings
+        <PlatformSettings
           title={"Platform Settings"}
           subtitle1={"ACCOUNT"}
-          // subtitle2={"APPLICATION"}
+        // subtitle2={"APPLICATION"}
         />
-        {/* <Conversations title={"Conversations"} />/ */}
+
       </Grid>
-      {/* <Projects title={"Projects"} description={"Architects design houses"} /> */}
+
     </Flex>
   );
 }

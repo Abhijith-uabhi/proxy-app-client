@@ -24,7 +24,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import userService from '../services/userService';
 import { authenticated } from '../store/slices/authSlice';
 import navigationConfig from 'config/navigationConfig';
-import RoutesConfig from 'routes';
+import RoutesConfig from '../routes';
 
 
 
@@ -187,10 +187,10 @@ export default function Dashboard(props) {
 					</PanelContent>
 				) : null}
 				<Footer />
-				<Portal>
+				{/* <Portal>
 					<FixedPlugin secondary={getActiveNavbar(routes)} fixed={fixed} onOpen={onOpen} />
-				</Portal>
-				<Configurator
+				</Portal> */}
+				{/* <Configurator
 					secondary={getActiveNavbar(routes)}
 					isOpen={isOpen}
 					onClose={onClose}
@@ -200,7 +200,7 @@ export default function Dashboard(props) {
 					}}
 					onOpaque={() => setSidebarVariant('opaque')}
 					onTransparent={() => setSidebarVariant('transparent')}
-				/>
+				/> */}
 			</MainPanel>
 		</ChakraProvider>
 	);

@@ -5,7 +5,7 @@ import Footer from 'components/Footer/Footer.js';
 import AuthNavbar from 'components/Navbars/AuthNavbar.js';
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import RoutesConfig from 'routes';
+import RoutesConfig from '../routes/index';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
