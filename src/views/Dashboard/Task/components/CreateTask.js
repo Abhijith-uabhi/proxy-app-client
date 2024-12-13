@@ -10,6 +10,7 @@ import CustomAlert from 'components/Alerts/Alert';
 import { getAllCountries } from 'utils/locationapis';
 import { getStatesByCountryCode } from 'utils/locationapis';
 import { getCitiesByCountryAndStateCode } from 'utils/locationapis';
+import taskManageimg from "../../../../assets/img/tasks_manage.jpeg"
 
 // Validation schema using Yup
 const validationSchemaStep1 = Yup.object().shape({
@@ -22,7 +23,7 @@ const validationSchemaStep2 = Yup.object().shape({
   due_date: Yup.date().required('Due Date is required'),
   address: Yup.string().required("Address is required"),
   country: Yup.string().required("Country is required"),
-  state: Yup.string().required("Country is required"),
+  state: Yup.string().required("State is required"),
   city: Yup.string().required("City is required")
 
 });
@@ -41,7 +42,10 @@ const TaskForm = () => {
     description: '',
     priority: '',
     due_date: '',
-    location: ''
+    state: '',
+    country: '',
+    city: '',
+    address: ''
   })
   const location = useLocation()
   const [alert, setAlert] = useState({ show: false, status: '', description: '' });
@@ -51,19 +55,24 @@ const TaskForm = () => {
 
   useEffect(() => {
     if (location.state) {
-      console.log(location.state.taskData);
-      setInitialValues(location.state.taskData)
+      const dataforEdit = location.state.taskData
+      console.log("THE DATA FROM THE LOCATION IS", location.state.taskData);
+      setInitialValues(dataforEdit)
+      fethlocationsForEdit(dataforEdit)
     }
 
-  }, [location])
-
-
-
+  }, [location, countries,])
 
   useEffect(() => {
-    fetchCountries()
+    // fetchCountries()
   }, [])
   console.log("the initial values i s", initialValues);
+
+  const fethlocationsForEdit = async (taskData) => {
+    const stateData = await handleCountryChange(taskData.country)
+    await handleStateChange(taskData.state, stateData)
+
+  }
 
   const handleNext = (values) => {
     console.log(validationSchemaStep1);
@@ -121,12 +130,13 @@ const TaskForm = () => {
 
       const statesData = await getStatesByCountryCode(country.isoCode);
       setStates(statesData);
+      return statesData
     } catch (error) {
       console.error("Failed to fetch states:", error);
     }
   };
 
-  const handleStateChange = async (stateName) => {
+  const handleStateChange = async (stateName, states) => {
     try {
       const state = states.find((state) => state.name === stateName)
       console.log("the state name and state", stateName, state);
@@ -235,7 +245,7 @@ const TaskForm = () => {
                           {({ field }) => (
                             <Select {...field} placeholder="Select State" onChange={(e) => {
                               field.onChange(e); // Update Formik's state
-                              handleStateChange(e.target.value); // Fetch states
+                              handleStateChange(e.target.value, states); // Fetch states
                             }}>
                               {states.map((state) => (
                                 <option value={state.name}>{state.name}</option>
@@ -252,7 +262,7 @@ const TaskForm = () => {
                         <FormLabel>City</FormLabel>
                         <Field name="city">
                           {({ field }) => (
-                            <Select {...field} placeholder="Select State">
+                            <Select {...field} placeholder="Select city">
                               {cities.map((city) => (
                                 <option value={city.name}>{city.name}</option>
                               ))}
@@ -273,7 +283,7 @@ const TaskForm = () => {
                         </Text>
                       </FormControl>
 
-                      <FormControl isInvalid={errors.due_date && touched.due_date}>
+                      <FormControl isInvalid={errors.due_date && touched.due_date} className='calendar-field'>
                         <FormLabel>Due Date</FormLabel>
                         <Field
                           as={Input}
@@ -304,15 +314,26 @@ const TaskForm = () => {
           <GridItem
             w="100%"
             h="100%"
-            bg="green.500"
             display={["none", "none", "block"]}
-          />
+          >
+              <img
+                src={taskManageimg}
+                alt="Task Management"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
+          </GridItem>
+
+
+
         </Grid>
 
 
 
       </Card>
-    </Flex>
+    </Flex >
   );
 };
 

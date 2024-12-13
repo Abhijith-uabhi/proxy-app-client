@@ -27,7 +27,6 @@ import navigationConfig from 'config/navigationConfig';
 import RoutesConfig from '../routes';
 
 
-
 export default function Dashboard(props) {
 	const { ...rest } = props;
 	// states and functions

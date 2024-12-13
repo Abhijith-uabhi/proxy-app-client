@@ -21,7 +21,7 @@ import taskService from "services/taksService";
 
 
 function TaskRow(props) {
-  const { title, description, priority, due_date, listType, task_id, updateTask, deleteTask, fetchTasks, status, location } = props;
+  const { title, description, priority, due_date, listType, task_id, updateTask, deleteTask, fetchTasks, status, address, city, state, country } = props;
   const textColor = useColorModeValue("gray.700", "white");
   const bgStatus = useColorModeValue("gray.400", "#1a202c");
   const colorStatus = useColorModeValue("white", "gray.400");
@@ -62,7 +62,7 @@ function TaskRow(props) {
 
   const handleEditTask = async () => {
     try {
-      await updateTask({ title, description, priority, due_date: dayjs(due_date).format('YYYY-MM-DD'), location }, task_id)
+      await updateTask({ title, description, priority, due_date: dayjs(due_date).format('YYYY-MM-DD'), address, city, country, state }, task_id)
     } catch (error) {
       console.log("Error editing a task", error);
 
@@ -106,9 +106,13 @@ function TaskRow(props) {
         </Td>
         <Td>
           <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
-            {location}
+            {country},{state}
           </Text>
+          <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">{city}</Text>
+          <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">{address}</Text>
+
         </Td>
+
         <Td>
           <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
             {dayjs(due_date).format("YYYY-MM-DD")}

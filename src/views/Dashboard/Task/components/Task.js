@@ -135,7 +135,7 @@ const Tasks = ({ title, captions, listType }) => {
                         <Tr my='.8rem' pl='0px' color='gray.400'>
                             {captions.map((caption, idx) => {
                                 return (
-                                    
+
                                     <Th color='gray.400' key={idx} ps={idx === 0 ? "0px" : null}>
                                         {caption}
                                     </Th>
@@ -158,7 +158,12 @@ const Tasks = ({ title, captions, listType }) => {
                                     priority={row.priority}
                                     due_date={row.due_date}
                                     status={row.status}
-                                    location={row.location}
+                                    address={row.address}
+                                    state={row.state}
+                                    city={row.city}
+                                    country={row.country}
+
+
                                 />
                             );
                         })}
