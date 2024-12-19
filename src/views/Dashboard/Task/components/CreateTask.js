@@ -316,14 +316,15 @@ const TaskForm = () => {
             h="100%"
             display={["none", "none", "block"]}
           >
-              <img
-                src={taskManageimg}
-                alt="Task Management"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                }}
-              />
+            <img
+              src={taskManageimg}
+              alt="Task Management"
+              style={{
+                width: "100%",
+                height: "100%",
+                borderRadius: "20px"
+              }}
+            />
           </GridItem>
 
 

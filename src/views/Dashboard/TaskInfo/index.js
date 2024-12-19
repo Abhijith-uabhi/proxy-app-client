@@ -1,5 +1,5 @@
 // Chakra imports
-import { Box, Flex, Grid, Icon, GridItem } from "@chakra-ui/react";
+import { Box, Flex, Grid, Icon, GridItem, Select, VStack, HStack } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import CommentSection from "./components/CommentSection"
 import DetailsSidebar from "./components/DetailsSidebar";
@@ -43,7 +43,7 @@ function TaskInfo() {
 
           const isRated = task.data.assignedBy[0].assigned_task_ratings?.length &&
             task.data.assignedBy[0].assigned_task_ratings.find((item) => item.task_name === task.data.title && item.ratingBy === user._id)
-            console.log("CHECK THE TASK IS ALREADY RATED", isRated);
+          console.log("CHECK THE TASK IS ALREADY RATED", isRated);
 
           if (!isRated) {
             setratingModalData({
@@ -102,7 +102,12 @@ function TaskInfo() {
     }
   }
 
+  const onChangeStatus = (value) => {
+    console.log(value);
+    console.log(task.status);
 
+
+  }
 
   return (
     <Flex direction='column' pt={{ base: "120px", md: "75px" }}>
@@ -119,7 +124,21 @@ function TaskInfo() {
             )}
 
           </GridItem>
+
           <GridItem >
+            <HStack spacing={4} paddingBottom="10px" w="100%">
+              <GridItem colSpan={4}>
+                <span>Task Status :</span>
+              </GridItem>
+              <GridItem colSpan={8} onChange={(e) => { onChangeStatus(e.target.value) }}>
+                <Select placeholder="Select Task Status" style={{ width: "100%" }} Value={task?.status}>
+                  <option value="completed">Completed</option>
+                  <option value="on-progress">On Progress</option>
+                  <option value="not-started">Not Started</option>
+                  <option value={"CREATED"}>Created</option>
+                </Select>
+              </GridItem>
+            </HStack>
             <DetailsSidebar task={task} isTaskOwner={task?.created_by === user?._id} />
             {task?.created_by === user?._id ? <AssigneeList task={task} fetchTask={fetchTask} /> : <></>}
 
