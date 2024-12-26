@@ -2,7 +2,7 @@
 import { Flex } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { tablesTableData } from "variables/general";
-import Tasks from "./components/Task";
+import Tasks from "./components/TaskList";
 import taskService from "services/taksService";
 import { useLocation } from "react-router-dom/cjs/react-router-dom";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";

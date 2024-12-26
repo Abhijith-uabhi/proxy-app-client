@@ -9,7 +9,7 @@ import {
 import { ViewIcon, AddIcon, CheckCircleIcon, AtSignIcon } from '@chakra-ui/icons';
 
 import TaskPage from "views/Dashboard/Task";
-import TaskForm from "views/Dashboard/Task/components/CreateTask";
+import TaskForm from "views/Dashboard/Task/components/TaskCreateForm"
 
 
 

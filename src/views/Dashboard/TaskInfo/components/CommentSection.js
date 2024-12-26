@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from "react";
-import { Box, Heading, Input, Button, VStack, Text, HStack, Flex, Avatar, Link } from "@chakra-ui/react";
+import { Box, Heading, Input, Button, VStack, Text, HStack, Flex, Avatar, Link, Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 import dayjs from "dayjs"
 import commentService from "../../../../services/commentService";
 import { socket } from "connection/socket";
+import { DotsMenuIcon } from "components/Icons/Icons";
 
 const CommentSection = ({ task, user }) => {
 
@@ -15,6 +16,7 @@ const CommentSection = ({ task, user }) => {
   const [parentCommentId, setParentCommentId] = useState(null); // Track which comment ID the reply is for
   const inputRef = useRef(null); // Ref to the input box
   const [showReplies, setShowReplies] = useState({})
+  const [selectedComment, setSelectedComment] = useState()
 
   useEffect(() => {
     if (task)
@@ -132,7 +134,31 @@ const CommentSection = ({ task, user }) => {
     }
   }
 
-  console.log("THE SHOW REPLIES", showReplies);
+
+  const handleEditComment = (comment_id,user) => {
+    try {
+      setReplyingTo(user);
+      setSelectedComment(comment_id)
+      inputRef.current.scrollIntoView({ behavior: "smooth" }); // Scroll to the input box
+      inputRef.current.focus();
+    } catch (error) {
+      console.log("error updating the comment", error);
+
+    }
+  }
+
+
+
+  const handleDeleteComment = () => {
+    try {
+
+    } catch (error) {
+      console.log("Error delete the coment", error);
+
+    }
+  }
+
+
 
   // Recursive function to render comments and replies
   const renderComments = (comments, parentId = null) => {
@@ -154,10 +180,32 @@ const CommentSection = ({ task, user }) => {
                 <Text fontSize="sm" color="gray.500" pl={2}>
                   {dayjs.unix(comment.created_at).fromNow()}
                 </Text>Ï
-                <Button size="xs" mt={2} onClick={() => handleReply(comment.sender, comment._id)}>
+                {/* <Button size="xs" mt={2} onClick={() => handleReply(comment.sender, comment._id)}>
                   Reply
-                </Button>
+                </Button> */}
+                <Menu>
+                  <MenuButton>
+                    <Button
+                      ms="0px"
+                      px="0px"
+                      variant="transparent-with-icon"
+                      leftIcon={
+                        <DotsMenuIcon boxSize="16px" />
+                      } />
 
+                  </MenuButton>
+                  <MenuList>
+                    <MenuItem onClick={() => handleReply(comment.sender, comment._id)} >
+                      Reply
+                    </MenuItem>
+                    <MenuItem onClick={() => { handleEditComment(comment._id, comment.sender) }}>
+                      Edit
+                    </MenuItem>
+                    <MenuItem onClick={() => { handleDeleteComment(comment._id) }}>
+                      Delete
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
 
               </HStack>
               {comment.hasReplies ?
@@ -180,6 +228,8 @@ const CommentSection = ({ task, user }) => {
       ));
   };
 
+
+
   return (
     <Box p={4} w="100%">
       <Heading as="h2" size="md" mb={4}>
@@ -194,7 +244,8 @@ const CommentSection = ({ task, user }) => {
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
         />
-        <Button colorScheme="teal" onClick={addComment}>
+        <Button colorScheme="teal" onClick={addComment} onEnter={() => {
+        }}>
           {replyingTo ? "Reply" : "Add Comment"}
         </Button>
       </HStack>

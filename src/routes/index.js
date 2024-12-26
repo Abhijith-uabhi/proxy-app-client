@@ -5,7 +5,7 @@ import Profile from "views/Dashboard/Profile";
 import SignIn from "views/Auth/SignIn.js";
 import SignUp from "views/Auth/SignUp.js";
 import TaskPage from "views/Dashboard/Task";
-import TaskForm from "views/Dashboard/Task/components/CreateTask";
+import TaskForm from "views/Dashboard/Task/components/TaskCreateForm";
 import TaskInfo from "views/Dashboard/TaskInfo";
 import { useSelector } from "react-redux";
 

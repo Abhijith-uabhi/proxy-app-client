@@ -7,20 +7,8 @@ import {
     useColorModeValue,
     Box,
     Heading, VStack
-} from "@chakra-ui/react";
-// Assets
-import avatar2 from "assets/img/avatars/avatar2.png";
-import avatar3 from "assets/img/avatars/avatar3.png";
-import avatar4 from "assets/img/avatars/avatar4.png";
-import avatar5 from "assets/img/avatars/avatar5.png";
-import avatar6 from "assets/img/avatars/avatar6.png";
-// Custom components
-import Card from "components/Card/Card";
-import CardBody from "components/Card/CardBody";
-import CardHeader from "components/Card/CardHeader";
+} from "@chakra-ui/react"
 import React, { useEffect, useState } from "react";
-import userService from "../../../../services/userService"
-import { useSelector } from "react-redux";
 import ConfirmModal from "components/Modals/confirmModal";
 import taskService from "../../../../services/taksService";
 import CustomAlert from "components/Alerts/Alert";

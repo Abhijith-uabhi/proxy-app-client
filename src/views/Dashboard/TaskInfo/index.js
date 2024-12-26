@@ -1,5 +1,5 @@
 // Chakra imports
-import { Box, Flex, Grid, Icon, GridItem, Select, VStack, HStack } from "@chakra-ui/react";
+import { Box, Flex, Grid, Icon, GridItem, Select, VStack, HStack, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import CommentSection from "./components/CommentSection"
 import DetailsSidebar from "./components/DetailsSidebar";
@@ -23,7 +23,7 @@ function TaskInfo() {
   const [allowComments, setAllowComments] = useState(false)
   const [showRatingModal, setShowratingModal] = useState(false)
   const [ratingData, setratingModalData] = useState({ title: "", description: "" })
-
+  const [taskStatus, setTaskStatus] = useState()
 
 
   useEffect(() => {
@@ -33,6 +33,7 @@ function TaskInfo() {
   const fetchTask = async () => {
     try {
       const task = await taskService.getSingleTask(id);
+      setTaskStatus(task.data.status)
       setTask(task.data);
 
       if (task.data.created_by === user._id) {
@@ -102,9 +103,10 @@ function TaskInfo() {
     }
   }
 
-  const onChangeStatus = (value) => {
-    console.log(value);
+  const onChangeStatus = (e) => {
+    console.log(e.target.value);
     console.log(task.status);
+    setTaskStatus(e.target.value)
 
 
   }
@@ -126,19 +128,23 @@ function TaskInfo() {
           </GridItem>
 
           <GridItem >
-            <HStack spacing={4} paddingBottom="10px" w="100%">
-              <GridItem colSpan={4}>
-                <span>Task Status :</span>
-              </GridItem>
-              <GridItem colSpan={8} onChange={(e) => { onChangeStatus(e.target.value) }}>
-                <Select placeholder="Select Task Status" style={{ width: "100%" }} Value={task?.status}>
-                  <option value="completed">Completed</option>
-                  <option value="on-progress">On Progress</option>
-                  <option value="not-started">Not Started</option>
-                  <option value={"CREATED"}>Created</option>
-                </Select>
-              </GridItem>
-            </HStack>
+            <Box display="inline-flex" alignItems="center" paddingBottom="10px" gap="4">
+              <Text fontSize="md" fontWeight="semibold">Task Status</Text>
+              <Text>:</Text>
+              <Select
+                placeholder="Select Task Status"
+                value={taskStatus}
+                onChange={onChangeStatus}
+                aria-label="Select Task Status"
+                width="200px"
+              >
+                <option value="COMPLETED">Completed</option>
+                <option value="IN_PROGRESS">In Progress</option>
+                <option value="NOT_STARTED">Not Started</option>
+                <option value="WAITING_FOR_APPROVAL">Waiting for Approval</option>
+                <option value="CREATED">Created</option>
+              </Select>
+            </Box>
             <DetailsSidebar task={task} isTaskOwner={task?.created_by === user?._id} />
             {task?.created_by === user?._id ? <AssigneeList task={task} fetchTask={fetchTask} /> : <></>}
 
