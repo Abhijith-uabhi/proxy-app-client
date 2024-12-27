@@ -111,6 +111,9 @@ function TaskInfo() {
 
   }
 
+  console.log("THE TASK AND THE USER IS", task, user);
+
+
   return (
     <Flex direction='column' pt={{ base: "120px", md: "75px" }}>
       <Card>
@@ -139,10 +142,12 @@ function TaskInfo() {
                 width="200px"
               >
                 <option value="COMPLETED">Completed</option>
+                <option value="CREATED">Created</option>
                 <option value="IN_PROGRESS">In Progress</option>
                 <option value="NOT_STARTED">Not Started</option>
                 <option value="WAITING_FOR_APPROVAL">Waiting for Approval</option>
-                <option value="CREATED">Created</option>
+                <option value="MARK_AS_COMPLETED">Mark as Completed</option> {/* User's selection */}
+
               </Select>
             </Box>
             <DetailsSidebar task={task} isTaskOwner={task?.created_by === user?._id} />

@@ -4,10 +4,11 @@ import dayjs from "dayjs"
 import commentService from "../../../../services/commentService";
 import { socket } from "connection/socket";
 import { DotsMenuIcon } from "components/Icons/Icons";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { ReplyIcon } from "components/Icons/Icons";
 
 const CommentSection = ({ task, user }) => {
 
-  console.log("THe task is", task);
 
   const [comments, setComments] = useState([]);
 
@@ -17,6 +18,7 @@ const CommentSection = ({ task, user }) => {
   const inputRef = useRef(null); // Ref to the input box
   const [showReplies, setShowReplies] = useState({})
   const [selectedComment, setSelectedComment] = useState()
+  const [isEdit, setIsEdit] = useState(false)
 
   useEffect(() => {
     if (task)
@@ -27,28 +29,45 @@ const CommentSection = ({ task, user }) => {
   // Function to handle adding a new comment or reply
   const addComment = async () => {
     try {
-      console.log("the parent comment id is", parentCommentId);
+
       if (!newComment.trim()) return
+      let result
+      if (isEdit) {
+        const updateCommentdata = {
+          comment: newComment
+        }
+        result = await commentService.editComment(selectedComment, updateCommentdata)
 
-      const newCommentData = {
-        task_id: task._id,
-        comment: newComment,
-        sender: {
-          user_id: user._id,
-          first_name: user.first_name,
-          last_name: user.last_name
-        },
-        ...parentCommentId && { parent_id: parentCommentId }, // Set parent_id if it's a reply, else null
-      };
+        const updatedComents = comments.map((comment) => {
+          if (comment._id === selectedComment) {
+            return result.data
+          } else {
+            return comment
+          }
+        })
 
-      const result = await commentService.addComment(newCommentData)
+        setComments(updatedComents)
 
+      } else {
+        const newCommentData = {
+          task_id: task._id,
+          comment: newComment,
+          sender: {
+            user_id: user._id,
+            first_name: user.first_name,
+            last_name: user.last_name
+          },
+          ...parentCommentId && { parent_id: parentCommentId }, // Set parent_id if it's a reply, else null
+        };
 
-      setComments((prev) => [
-        result.data,
-        ...prev,
+        result = await commentService.addComment(newCommentData)
 
-      ]); // Add new comment or reply
+        setComments((prev) => [
+          result.data,
+          ...prev,
+
+        ]);
+      }
       setNewComment(""); // Clear input
       setReplyingTo(null); // Reset replying state
       setParentCommentId(null); // Reset parent comment ID
@@ -56,7 +75,6 @@ const CommentSection = ({ task, user }) => {
       console.log("Error add comment", error);
 
     }
-    if (newComment.trim() === "") return; // Prevent empty comment
 
   };
 
@@ -65,7 +83,6 @@ const CommentSection = ({ task, user }) => {
   const fetchComments = async (parent_id) => {
     try {
       const result = await commentService.getcomments(task?._id, parent_id)
-      console.log("THE FETCHED COMMENST IS ", result);
 
       if (result.data) {
         if (!parent_id) {
@@ -94,6 +111,7 @@ const CommentSection = ({ task, user }) => {
     setParentCommentId(id); // Set the parent comment ID
     inputRef.current.scrollIntoView({ behavior: "smooth" }); // Scroll to the input box
     inputRef.current.focus(); // Focus the input
+
   };
 
   useEffect(() => {
@@ -135,12 +153,14 @@ const CommentSection = ({ task, user }) => {
   }
 
 
-  const handleEditComment = (comment_id,user) => {
+  const handleEditComment = (comment_id, user, comment) => {
     try {
       setReplyingTo(user);
       setSelectedComment(comment_id)
       inputRef.current.scrollIntoView({ behavior: "smooth" }); // Scroll to the input box
       inputRef.current.focus();
+      setIsEdit(true)
+      setNewComment(comment)
     } catch (error) {
       console.log("error updating the comment", error);
 
@@ -149,9 +169,13 @@ const CommentSection = ({ task, user }) => {
 
 
 
-  const handleDeleteComment = () => {
+  const handleDeleteComment = async (id) => {
     try {
-
+      const res = await commentService.deleteComment(id)
+      if (res.data) {
+        const updatedComments = comments.filter((comment) => { return comment._id !== id })
+        setComments(updatedComments)
+      }
     } catch (error) {
       console.log("Error delete the coment", error);
 
@@ -196,14 +220,15 @@ const CommentSection = ({ task, user }) => {
                   </MenuButton>
                   <MenuList>
                     <MenuItem onClick={() => handleReply(comment.sender, comment._id)} >
-                      Reply
+                      <ReplyIcon /> <span style={{ paddingLeft: "10px" }}>Reply</span>
                     </MenuItem>
-                    <MenuItem onClick={() => { handleEditComment(comment._id, comment.sender) }}>
-                      Edit
+                    {comment.sender.user_id === user._id ? <><MenuItem onClick={() => { handleEditComment(comment._id, comment.sender, comment.comment) }}>
+                      <EditIcon /> <span style={{ paddingLeft: "10px" }}>Edit</span>
                     </MenuItem>
-                    <MenuItem onClick={() => { handleDeleteComment(comment._id) }}>
-                      Delete
-                    </MenuItem>
+                      <MenuItem onClick={() => { handleDeleteComment(comment._id) }}>
+                        <DeleteIcon />  <span style={{ paddingLeft: "10px" }}>Delete</span>
+                      </MenuItem></> : <></>}
+
                   </MenuList>
                 </Menu>
 
@@ -246,7 +271,7 @@ const CommentSection = ({ task, user }) => {
         />
         <Button colorScheme="teal" onClick={addComment} onEnter={() => {
         }}>
-          {replyingTo ? "Reply" : "Add Comment"}
+          {isEdit ? "Edit" : replyingTo ? "Reply" : "Add Comment"}
         </Button>
       </HStack>
 

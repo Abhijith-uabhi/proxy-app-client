@@ -547,11 +547,11 @@ export const DotsMenuIcon = ({ boxSize = "24px", color = "gray.500", ...props })
 );
 
 
-export const ReplyIcon = () => (
-  <Icon viewBox="0 0 24 24" boxSize="16px">
+export const ReplyIcon = ({ boxSize = "16px", color = "currentColor", ...props }) => (
+  <Icon viewBox="0 0 24 24" boxSize={boxSize} color={color} {...props}>
     <path
       fill="currentColor"
-      d="M10 20v-6h-4l5-5 5 5h-4v6h-2zm9-9.59v7.59h-2v-7.59l-4.29 4.29-1.41-1.41 6-6 6 6-1.41 1.41z"
+      d="M10 9V5L3 12l7 7v-4.1c4.28 0 7.24 1.34 9.51 4.1-.84-4.69-3.8-8.36-9.51-10z"
     />
   </Icon>
 );

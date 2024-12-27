@@ -28,6 +28,7 @@ import completeProfileImg from "../../assets/img/completeProfileImg.webp"
 import userService from "services/userService";
 import { AUTH_TOKEN } from "config/authConfig";
 import { useDispatch } from "react-redux";
+import { loginSuccess } from "store/slices/authSlice";
 
 
 
