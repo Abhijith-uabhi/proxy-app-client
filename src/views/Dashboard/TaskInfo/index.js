@@ -86,6 +86,11 @@ function TaskInfo() {
     }
   };
 
+  const updateTaskStatus = async (data) => {
+    await taskService.updateTask(task._id, data, "update_data")
+    await fetchTask()
+  }
+
   const onsubmitRating = async (rating) => {
     try {
       const payload = {
@@ -104,11 +109,8 @@ function TaskInfo() {
   }
 
   const onChangeStatus = (e) => {
-    console.log(e.target.value);
-    console.log(task.status);
     setTaskStatus(e.target.value)
-
-
+    updateTaskStatus({ status: e.target.value })
   }
 
   console.log("THE TASK AND THE USER IS", task, user);
@@ -132,7 +134,7 @@ function TaskInfo() {
 
           <GridItem >
             <Box display="inline-flex" alignItems="center" paddingBottom="10px" gap="4">
-              <Text fontSize="md" fontWeight="semibold">Task Status</Text>
+              <Text fontSize="md" fontWeight="semibold"> Change Task Status</Text>
               <Text>:</Text>
               <Select
                 placeholder="Select Task Status"
@@ -141,12 +143,19 @@ function TaskInfo() {
                 aria-label="Select Task Status"
                 width="200px"
               >
-                <option value="COMPLETED">Completed</option>
-                <option value="CREATED">Created</option>
-                <option value="IN_PROGRESS">In Progress</option>
-                <option value="NOT_STARTED">Not Started</option>
-                <option value="WAITING_FOR_APPROVAL">Waiting for Approval</option>
-                <option value="MARK_AS_COMPLETED">Mark as Completed</option> {/* User's selection */}
+
+                {task?.created_by == user?._id ? <>
+                  {/* For task owner */}
+                  <option value="COMPLETED">Completed</option>
+                  <option value="PENDING">Pending</option></> :
+                  <>
+                    {/* for task assigners */}
+                    <option value="IN_PROGRESS">In Progress</option>
+                    <option value="NOT_STARTED">Not Started</option>
+                    <option value="MARK_AS_COMPLETED">Mark as Completed</option>
+                  </>}
+
+
 
               </Select>
             </Box>

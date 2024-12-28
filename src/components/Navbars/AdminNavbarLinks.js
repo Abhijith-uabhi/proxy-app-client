@@ -63,8 +63,8 @@ export default function HeaderLinks(props) {
 
   const handleNotificationEvent = (data) => {
     try {
-      console.log("THE DATA IS ",data);
-      
+      console.log("THE DATA OF THE TASK NOTIFICATION SOCKET ", data);
+
       setNotifications((prevNotifications) => {
         return [...prevNotifications, JSON.stringify(data)];
       });

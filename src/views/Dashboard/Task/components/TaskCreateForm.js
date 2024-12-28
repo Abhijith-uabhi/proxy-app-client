@@ -64,7 +64,7 @@ const TaskForm = () => {
   }, [location, countries,])
 
   useEffect(() => {
-    // fetchCountries()
+    fetchCountries()
   }, [])
   console.log("the initial values i s", initialValues);
 

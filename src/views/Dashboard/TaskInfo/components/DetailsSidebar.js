@@ -24,9 +24,8 @@ const DetailsSidebar = ({ task, isTaskOwner }) => {
             <Text>:</Text>
             <Text ml={2}>
               {task?.volunteer_id
-                ? `${task?.assignedBy[0]?.first_name || ""} ${
-                    task?.assignedBy[0]?.last_name || ""
-                  }`
+                ? `${task?.assignedBy[0]?.first_name || ""} ${task?.assignedBy[0]?.last_name || ""
+                }`
                 : "Unassigned"}
             </Text>
           </Flex>
@@ -54,6 +53,16 @@ const DetailsSidebar = ({ task, isTaskOwner }) => {
 
         <Flex align="center" w="100%">
           <Text fontWeight="bold" minW="120px">
+            Status
+          </Text>
+          <Text>:</Text>
+          <Text ml={2}>
+            {task?.status}
+          </Text>
+        </Flex>
+
+        <Flex align="center" w="100%">
+          <Text fontWeight="bold" minW="120px">
             Priority
           </Text>
           <Text>:</Text>
@@ -63,8 +72,8 @@ const DetailsSidebar = ({ task, isTaskOwner }) => {
               task?.priority === "High"
                 ? "red.400"
                 : task?.priority === "Medium"
-                ? "green.400"
-                : "gray.400"
+                  ? "green.400"
+                  : "gray.400"
             }
             color="white"
             fontSize="12px"
