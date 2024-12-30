@@ -10,7 +10,7 @@ import CustomAlert from 'components/Alerts/Alert';
 import { getAllCountries } from 'utils/locationapis';
 import { getStatesByCountryCode } from 'utils/locationapis';
 import { getCitiesByCountryAndStateCode } from 'utils/locationapis';
-import taskManageimg from "../../../../assets/img/tasks_manage.jpeg"
+import taskManageImage from "../../../../assets/img/manageTask.jpg"
 
 // Validation schema using Yup
 const validationSchemaStep1 = Yup.object().shape({
@@ -316,16 +316,25 @@ const TaskForm = () => {
             h="100%"
             display={["none", "none", "block"]}
           >
-            <img
-              src={taskManageimg}
-              alt="Task Management"
-              style={{
-                width: "100%",
-                height: "100%",
-                borderRadius: "20px"
-              }}
-            />
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              w="100%"
+              h="100%"
+            >
+              <img
+                src={taskManageImage}
+                alt="Task Management"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "20px"
+                }}
+              />
+            </Box>
           </GridItem>
+
 
 
 
