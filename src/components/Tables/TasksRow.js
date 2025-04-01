@@ -18,10 +18,11 @@ import React, { useState } from "react";
 import { FaPencilAlt, FaTrashAlt, FaUserPlus } from "react-icons/fa";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import taskService from "services/taksService";
+import ReactPaginate from "react-paginate";
 
 
 function TaskRow(props) {
-  const { title, description, priority, due_date, listType, task_id, updateTask, deleteTask, fetchTasks, status, location } = props;
+  const { tasks, title, description, priority, due_date, listType, task_id, updateTask, deleteTask, fetchTasks, status, location } = props;
   const textColor = useColorModeValue("gray.700", "white");
   const bgStatus = useColorModeValue("gray.400", "#1a202c");
   const colorStatus = useColorModeValue("white", "gray.400");
@@ -30,11 +31,28 @@ function TaskRow(props) {
   const [modalDescription, setModalDescription] = useState("")
   const [alert, setAlert] = useState({ show: false, status: '', description: '' });
 
+  const [currentPage, setCurrentPage] = useState(0);
+  const tasksPerPage = 10;
+
+
+
+
+  const handlePageChange = async (selectedPage) => {
+    console.log("Selected page:", selectedPage.selected);
+    try {
+      setCurrentPage(selectedPage.selected);
+      await fetchTasks(selectedPage.selected, tasksPerPage);
+    } catch (error) {
+      console.error("Error in handlePageChange:", error);
+    }
+  };
+
+
 
   const handleOk = async () => {
     try {
       if (listType === "user_tasks") {
-        await deleteTask(task_id)
+        await deleteTask(tasks[currentPage].task_id)
       } else {
         let type
         if (listType === 'all_tasks') type = "assign"
@@ -42,7 +60,7 @@ function TaskRow(props) {
         else if (listType === "assigned_tasks") type = "unassign"
 
 
-        await updateTask({ volunteer_id: "" }, task_id, type)
+        await updateTask({ volunteer_id: "" }, tasks[currentPage].task_id, type)
 
       }
       setShowConfirmModal(false)
@@ -69,116 +87,126 @@ function TaskRow(props) {
     }
   }
 
+  useEffect(() => {
+    fetchTasks(currentPage, tasksPerPage);
+  }, [currentPage]);
 
 
   return (
     <>
-      <Tr>
-        <Td>
-          <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
-            {listType !== "all_tasks" ? <Link textDecoration="underline" onClick={(() => {
-              history.push({
-                pathname: `/admin/task/info/${task_id}`,  // Passing data as state
-                state: { type: listType }
-              });
-            })}>
-              {title}
-            </Link> : (title)}
-
-          </Text>
-        </Td>
-
-        <Td>
-          <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
-            {description}
-          </Text>
-        </Td>
-        <Td>
-          <Badge
-            bg={priority === "High" ? "red.400" : priority === "Medium" ? "green.400" : bgStatus}
-            color={"white"}
-            fontSize="16px"
-            p="3px 10px"
-            borderRadius="8px"
-          >
-            {priority}
-          </Badge>
-        </Td>
-        <Td>
-          <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
-            {location}
-          </Text>
-        </Td>
-        <Td>
-          <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
-            {dayjs(due_date).format("YYYY-MM-DD")}
-          </Text>
-        </Td>
-        {listType === "user_tasks" ? (<>
+      {tasks.map((task, index) => (
+        <Tr key={task.task_id}>
           <Td>
             <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
-              {status}
+              {listType !== "all_tasks" ? (
+                <Link
+                  textDecoration="underline"
+                  onClick={() =>
+                    history.push({
+                      pathname: `/admin/task/info/${task.task_id}`,
+                      state: { type: listType },
+                    })
+                  }
+                >
+                  {task.title}
+                </Link>
+              ) : (
+                task.title
+              )}
             </Text>
-          </Td></>) : (<></>)}
-        <Td>
-          <Flex
-            direction={{ sm: "column", md: "row" }}
-            align="flex-start"
-            p={{ md: "24px" }}
-          >
-            {listType === "user_tasks" ? <>      <Button
-              p="0px"
-              bg="transparent"
-              mb={{ sm: "10px", md: "0px" }}
-              me={{ md: "12px" }}
-
-              onClick={() => { setShowConfirmModal(true), setModalDescription("Are you sure want to delete this task") }}
+          </Td>
+          <Td>
+            <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
+              {task.description}
+            </Text>
+          </Td>
+          <Td>
+            <Badge
+              bg={
+                task.priority === "High"
+                  ? "red.400"
+                  : task.priority === "Medium"
+                    ? "green.400"
+                    : bgStatus
+              }
+              color={"white"}
+              fontSize="16px"
+              p="3px 10px"
+              borderRadius="8px"
             >
-              <Flex color="red.500" cursor="pointer" align="center" p="12px">
-                <Icon as={FaTrashAlt} me="4px" />
-                <Text fontSize="sm" fontWeight="semibold">
-                  DELETE
-                </Text>
-              </Flex>
-            </Button>
-              <Button p="0px" bg="transparent" onClick={() => { handleEditTask() }}>
-                <Flex color={textColor} cursor="pointer" align="center" p="12px">
-                  <Icon as={FaPencilAlt} me="4px" />
+              {task.priority}
+            </Badge>
+          </Td>
+          <Td>
+            <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
+              {task.location}
+            </Text>
+          </Td>
+          <Td>
+            <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
+              {dayjs(task.due_date).format("YYYY-MM-DD")}
+            </Text>
+          </Td>
+          {listType === "user_tasks" && (
+            <Td>
+              <Text fontSize="md" color={textColor} fontWeight="bold" pb=".5rem">
+                {task.status}
+              </Text>
+            </Td>
+          )}
+          <Td>
+            <Flex
+              direction={{ sm: "column", md: "row" }}
+              align="flex-start"
+              p={{ md: "24px" }}
+            >
+              <Button
+                p="0px"
+                bg="transparent"
+                onClick={() => {
+                  setShowConfirmModal(true);
+                  setModalDescription(
+                    listType === "all_tasks"
+                      ? "Are you sure to assign this task?"
+                      : "Are you sure want to unassign this task?"
+                  );
+                }}
+              >
+                <Flex
+                  color={listType === "all_tasks" ? "blue.500" : "red.500"}
+                  cursor="pointer"
+                  align="center"
+                  p="12px"
+                >
+                  <Icon
+                    as={
+                      listType === "all_tasks"
+                        ? FaUserPlus // Assign icon
+                        : FaTrashAlt // Delete icon
+                    }
+                    me="4px"
+                  />
                   <Text fontSize="sm" fontWeight="semibold">
-                    EDIT
+                    {listType === "all_tasks" ? "Assign Task" : "Unassign/Delete"}
                   </Text>
                 </Flex>
-              </Button></> : <>  <Button p="0px" bg="transparent" onClick={(() => {
-                setShowConfirmModal(true)
-                setModalDescription(listType == "all_tasks" ? "Are you sure to assign this task..!" : "Are you sure want to un assign this task..?")
-              })}>
-                {
-                  listType === "all_tasks" ? (
-                    <Flex color={textColor} cursor="pointer" align="center" p="12px">
-                      <Icon as={FaUserPlus} me="4px" /> {/* Icon representing "Assign Task" */}
-                      <Text fontSize="sm" fontWeight="semibold">
-                        Assign Task
-                      </Text>
-                    </Flex>
-                  ) : (<></>)
-                }
-                {
-                  listType === "assigned_tasks" ? (
-                    <Flex color={textColor} cursor="pointer" align="center" p="12px">
-                      <Icon as={FaUserPlus} me="4px" /> {/* Icon representing "Assign Task" */}
-                      <Text fontSize="sm" fontWeight="semibold">
-                        Unassign Task
-                      </Text>
-                    </Flex>
-                  ) : (<></>)
-                }
+              </Button>
+            </Flex>
+          </Td>
+        </Tr>
+      ))}
 
+      <Flex justify="center" mt="4">
+        <ReactPaginate
+          previousLabel={"Previous"}
+          nextLabel={"Next"}
+          pageCount={Math.ceil(totalTasksCount / tasksPerPage)}
+          onPageChange={(selected) => setCurrentPage(selected.selected)}
+          containerClassName={"pagination"}
+          activeClassName={"active"} 
+        />
+      </Flex>
 
-              </Button></>}
-
-          </Flex>
-        </Td>
-      </Tr>
       {
         showConfirmModal && (
           <ConfirmModal

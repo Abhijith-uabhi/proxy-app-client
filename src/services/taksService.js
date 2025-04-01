@@ -56,4 +56,24 @@ taskService.deleteTask=(id)=>{
     )
 }
 
+const fetchTasks = async (page, limit) => {
+    try {
+      const response = await taskService.get(`/tasks?page=${page}&limit=${limit}`);
+  
+      if (response && response.data) {
+        const { tasks, totalTasksCount } = response.data;
+        setTasks(tasks);
+        setTotalTasksCount(totalTasksCount);
+      }
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
+      setAlert({
+        show: true,
+        status: "error",
+        description: "Failed to fetch tasks. Please try again.",
+      });
+    }
+  };
+  
+
 export default taskService
