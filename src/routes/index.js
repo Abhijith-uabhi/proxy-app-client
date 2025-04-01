@@ -1,13 +1,11 @@
 // imports
 import Dashboard from "views/Dashboard/Dashboard";
-import Tables from "views/Dashboard/Tables";
-import Billing from "views/Dashboard/Billing";
 import RTLPage from "views/Dashboard/RTL";
 import Profile from "views/Dashboard/Profile";
 import SignIn from "views/Auth/SignIn.js";
 import SignUp from "views/Auth/SignUp.js";
 import TaskPage from "views/Dashboard/Task";
-import TaskForm from "views/Dashboard/Task/components/CreateTask";
+import TaskForm from "views/Dashboard/Task/components/TaskCreateForm";
 import TaskInfo from "views/Dashboard/TaskInfo";
 import { useSelector } from "react-redux";
 
@@ -32,7 +30,7 @@ const getRoutes = (user) => [
             rtlName: "لوحة القيادة",
             component: TaskPage,
             layout: "/admin",
-          },
+        },
 
     ] : []),
     ...(user?.role === "author" || user?.role === "admin" ? [
@@ -65,20 +63,8 @@ const getRoutes = (user) => [
         component: TaskInfo,
         layout: "/admin",
     },
-    {
-        path: "/tables",
-        name: "Tables",
-        rtlName: "لوحة القيادة",
-        component: Tables,
-        layout: "/admin",
-    },
-    {
-        path: "/billing",
-        name: "Billing",
-        rtlName: "لوحة القيادة",
-        component: Billing,
-        layout: "/admin",
-    },
+
+
     {
         path: "/rtl-support-page",
         name: "RTL",

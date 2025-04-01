@@ -19,8 +19,6 @@ import {
 } from "@chakra-ui/react";
 // Assets
 import avatar1 from "assets/img/avatars/avatar1.png";
-import avatar2 from "assets/img/avatars/avatar2.png";
-import avatar3 from "assets/img/avatars/avatar3.png";
 import { SignOutIcon } from "components/Icons/Icons";
 // Custom Icons
 import { ProfileIcon, SettingsIcon } from "components/Icons/Icons";
@@ -35,9 +33,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom"
 import { useLocation } from "react-router-dom/cjs/react-router-dom";
 import navigationConfig from 'config/navigationConfig';
-import { logout } from "../../store/slices/authSlice";
+import { authenticated, logout } from "../../store/slices/authSlice";
 import { timeAgo } from "utils/timeFormatter";
 import userService from "services/userService";
+import dayjs from "dayjs";
 
 
 export default function HeaderLinks(props) {
@@ -64,8 +63,10 @@ export default function HeaderLinks(props) {
 
   const handleNotificationEvent = (data) => {
     try {
+      console.log("THE DATA OF THE TASK NOTIFICATION SOCKET ", data);
+
       setNotifications((prevNotifications) => {
-        return [...prevNotifications, data];
+        return [...prevNotifications, JSON.stringify(data)];
       });
     } catch (error) {
 
@@ -87,6 +88,8 @@ export default function HeaderLinks(props) {
       setNotifications([]); // Ensure notifications are cleared in the UI
       if (user?.notifications?.length) {
         userService.deletUserNotifications()
+        dispatch(authenticated({ user: { ...user, notifications: [] } }))
+
       }
     }
   }, [location]);
@@ -97,6 +100,8 @@ export default function HeaderLinks(props) {
     if (user) {
 
       if (user.notifications?.length) {
+        console.log("USER NOTIFICATIONS", JSON.parse(user.notifications[0]));
+
         setNotifications(user.notifications);
       }
       if (user.role === "admin") {
@@ -285,8 +290,9 @@ export default function HeaderLinks(props) {
                   mb="10px"
                 >
                   <ItemContent
-                    time={timeAgo(item.created_at)}
-                    info={`from ${item.user}`}
+                    time={dayjs.unix(JSON.parse(item)?.created_at).fromNow()}
+
+                    info={`from ${JSON.parse(item).created_by}`}
                     boldInfo="New Task"
                     aName="Alicia"
                     aSrc={avatar1}

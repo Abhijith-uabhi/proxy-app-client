@@ -19,7 +19,7 @@ import SidebarResponsive from "components/Sidebar/SidebarResponsive";
 import PropTypes from "prop-types";
 import React from "react";
 import { NavLink } from "react-router-dom";
-import routes from "routes.js";
+import RoutesConfig from '../../routes';
 
 export default function AuthNavbar(props) {
   const [open, setOpen] = React.useState(false);
@@ -27,6 +27,9 @@ export default function AuthNavbar(props) {
     setOpen(!open);
   };
   const { logo, logoText, secondary, ...rest } = props;
+
+  const routes = RoutesConfig();
+
   // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => {
     return window.location.href.indexOf(routeName) > -1 ? true : false;

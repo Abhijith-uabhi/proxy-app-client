@@ -10,7 +10,6 @@ import React, { useState } from 'react';
 import dashRoutes from 'config/navigationConfig';
 // Custom Chakra theme
 import theme from 'theme/theme.js';
-import FixedPlugin from '../components/FixedPlugin/FixedPlugin';
 // Custom components
 import MainPanel from '../components/Layout/MainPanel';
 import PanelContainer from '../components/Layout/PanelContainer';
@@ -18,6 +17,8 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import PanelContent from '../components/Layout/PanelContent';
+
+
 export default function Dashboard(props) {
 	const { ...rest } = props;
 	// states and functions
@@ -122,7 +123,7 @@ export default function Dashboard(props) {
 						</PanelContent>
 					) : null}
 					<Footer />
-					<Portal>
+					{/* <Portal>
 						<FixedPlugin secondary={getActiveNavbar(dashRoutes)} fixed={fixed} onOpen={onOpen} />
 					</Portal>
 					<Configurator
@@ -135,7 +136,7 @@ export default function Dashboard(props) {
 						}}
 						onOpaque={() => setSidebarVariant('opaque')}
 						onTransparent={() => setSidebarVariant('transparent')}
-					/>
+					/> */}
 				</MainPanel>
 			</RtlProvider>
 		</ChakraProvider>

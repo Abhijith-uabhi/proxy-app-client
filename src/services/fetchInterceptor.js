@@ -3,7 +3,7 @@ import CustomAlert from "../components/Alerts/Alert";
 
 // Create an instance of axios
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'https://your-api-url.com', // Set your base URL
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:8000', // Set your base URL
   timeout: 5000,  // Set a timeout for the requests (optional)
 });
 

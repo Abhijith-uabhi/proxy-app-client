@@ -7,9 +7,9 @@ const userService = {}
 
 
 userService.getUser = (user_id) => {
-    let url=`${basePath}/get`
-    if(user_id){
-       url= `${basePath}/get?id=${user_id}`
+    let url = `${basePath}/get`
+    if (user_id) {
+        url = `${basePath}/get?id=${user_id}`
     }
     return (
         api({
@@ -41,10 +41,14 @@ userService.deletUserNotifications = () => {
 }
 
 
-userService.editProfile = (id, values) => {
+userService.editProfile = (id, values, mode) => {
+    let url = `${basePath}/update/${id}`
+    if (mode) {
+        url = `${basePath}/update/${id}?type=${mode}`
+    }
     return (
         api({
-            url: `${basePath}/update/${id}`,
+            url: url,
             method: "put",
             data: values
 

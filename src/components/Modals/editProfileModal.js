@@ -187,7 +187,7 @@ const EditProfileModal = ({ open, onClose, mode }) => {
 
                                                     <Button type='submit' bg='teal.300' fontSize='15px' color='white' fontWeight='bold' w='100%' h='45' mb='24px'
                                                         _hover={{ bg: "teal.200" }} _active={{ bg: "teal.400" }}>
-                                                        Edit
+                                                       Save
                                                     </Button>
                                                 </FormControl>
                                             </Form>

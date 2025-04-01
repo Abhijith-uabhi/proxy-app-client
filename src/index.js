@@ -24,7 +24,7 @@ import AdminLayout from "layouts/Admin.js";
 import RTLLayout from "layouts/RTL.js";
 import { Provider } from 'react-redux'
 import store from "../src/store/index"
-
+import "./common.css"
 
 
 

@@ -1,4 +1,4 @@
-import { createIcon } from "@chakra-ui/icons";
+import { createIcon, Icon } from "@chakra-ui/icons";
 
 export const AdobexdLogo = createIcon({
   displayName: "AdobexdLogo",
@@ -535,4 +535,42 @@ export const SignOutIcon = createIcon({
     </g>
   ),
 });
+
+
+
+export const DotsMenuIcon = ({ boxSize = "24px", color = "gray.500", ...props }) => (
+  <Icon viewBox="0 0 24 24" boxSize={boxSize} color={color} {...props}>
+    <circle cx="12" cy="5" r="2" />
+    <circle cx="12" cy="12" r="2" />
+    <circle cx="12" cy="19" r="2" />
+  </Icon>
+);
+
+
+export const ReplyIcon = ({ boxSize = "16px", color = "currentColor", ...props }) => (
+  <Icon viewBox="0 0 24 24" boxSize={boxSize} color={color} {...props}>
+    <path
+      fill="currentColor"
+      d="M10 9V5L3 12l7 7v-4.1c4.28 0 7.24 1.34 9.51 4.1-.84-4.69-3.8-8.36-9.51-10z"
+    />
+  </Icon>
+);
+
+export const EditIcon = ({ boxSize = "16px", color = "currentColor", ...props }) => (
+  <Icon viewBox="0 0 24 24" boxSize={boxSize} color={color} {...props}>
+    <path
+      fill="currentColor"
+      d="M3 17.25V21h3.75l11.04-11.04-3.75-3.75L3 17.25zm17.71-10.04a1.004 1.004 0 0 0 0-1.41l-2.54-2.54a1.004 1.004 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+    />
+  </Icon>
+);
+
+export const DeleteIcon = ({ boxSize = "16px", color = "currentColor", ...props }) => (
+  <Icon viewBox="0 0 24 24" boxSize={boxSize} color={color} {...props}>
+    <path
+      fill="currentColor"
+      d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-3.5l-1-1zM18 7H6v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7z"
+    />
+  </Icon>
+);
 
