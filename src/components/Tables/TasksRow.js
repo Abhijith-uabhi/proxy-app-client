@@ -18,7 +18,6 @@ import React, { useState } from "react";
 import { FaPencilAlt, FaTrashAlt, FaUserPlus } from "react-icons/fa";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import taskService from "services/taksService";
-import ReactPaginate from "react-paginate";
 
 
 function TaskRow(props) {
