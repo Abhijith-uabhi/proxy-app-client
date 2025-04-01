@@ -17,7 +17,7 @@ import dayjs from "dayjs";
 import React, { useState } from "react";
 import { FaPencilAlt, FaTrashAlt, FaUserPlus } from "react-icons/fa";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
-import taskService from "services/taksService";
+
 
 
 function TaskRow(props) {
@@ -32,19 +32,6 @@ function TaskRow(props) {
 
   const [currentPage, setCurrentPage] = useState(0);
   const tasksPerPage = 10;
-
-
-
-
-  const handlePageChange = async (selectedPage) => {
-    console.log("Selected page:", selectedPage.selected);
-    try {
-      setCurrentPage(selectedPage.selected);
-      await fetchTasks(selectedPage.selected, tasksPerPage);
-    } catch (error) {
-      console.error("Error in handlePageChange:", error);
-    }
-  };
 
 
 
@@ -85,10 +72,6 @@ function TaskRow(props) {
 
     }
   }
-
-  useEffect(() => {
-    fetchTasks(currentPage, tasksPerPage);
-  }, [currentPage]);
 
 
   return (
