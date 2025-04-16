@@ -25,6 +25,7 @@ import userService from '../services/userService';
 import { authenticated } from '../store/slices/authSlice';
 import navigationConfig from 'config/navigationConfig';
 import RoutesConfig from '../routes';
+import { LOCATION_COORDINATES } from 'config/authConfig';
 
 
 export default function Dashboard(props) {
@@ -40,12 +41,11 @@ export default function Dashboard(props) {
 
 	const routes = RoutesConfig();
 
-	console.log("THE ROUTES IS", routes);
-
 
 
 	useEffect(() => {
 		getUser()
+		getLocation()
 	}, [token])
 
 
@@ -53,7 +53,6 @@ export default function Dashboard(props) {
 
 
 		if (user) {
-
 			socket.emit("join_room", { user_id: user._id })
 			if (user.role === "admin") {
 				setNavRoutes(navigationConfig.admin)
@@ -62,14 +61,64 @@ export default function Dashboard(props) {
 			} else {
 				setNavRoutes(navigationConfig.author)
 			}
-
-
 		}
 
 	}, [user])
 
 
-	
+
+
+	const onSuccess = (position) => {
+		console.log("The position is", position);
+		const coords = {
+			type: "Point",
+			coordinates: [position.coords.latitude, position.coords.longitude] //[lat]
+		}
+		localStorage.setItem(LOCATION_COORDINATES, JSON.stringify(coords))
+
+	};
+
+	const onError = (error) => {
+		let message;
+
+		switch (error.code) {
+			case error.PERMISSION_DENIED:
+				message = "Location access was denied. Please enable location services in your browser/device settings.";
+				break;
+			case error.POSITION_UNAVAILABLE:
+				message = "Location information is unavailable (kCLErrorLocationUnknown). This usually means your device can't get a GPS fix.";
+				break;
+			case error.TIMEOUT:
+				message = "The request to get location timed out. Please check your internet connection.";
+				break;
+			case error.UNKNOWN_ERROR:
+				message = "An unknown error occurred while getting your location.";
+				break;
+			default:
+				message = "Failed to get location.";
+		}
+
+
+	};
+
+	const getLocation = () => {
+		if (!navigator.geolocation) {
+			onError({ code: 0, message: "Geolocation is not supported by your browser" });
+			return;
+		}
+		navigator.geolocation.getCurrentPosition(
+			onSuccess,
+			onError,
+			{
+				enableHighAccuracy: true,
+				timeout: 15000,  // Increased timeout
+				maximumAge: 0
+			}
+		);
+	};
+
+
+
 
 
 	const getUser = async () => {

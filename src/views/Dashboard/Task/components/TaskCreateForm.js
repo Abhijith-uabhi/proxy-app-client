@@ -11,6 +11,8 @@ import { getAllCountries } from 'utils/locationapis';
 import { getStatesByCountryCode } from 'utils/locationapis';
 import { getCitiesByCountryAndStateCode } from 'utils/locationapis';
 import taskManageImage from "../../../../assets/img/manageTask.jpg"
+import { LOCATION_COORDINATES } from 'config/authConfig';
+import { getCoordinates } from 'utils/locationapis';
 
 // Validation schema using Yup
 const validationSchemaStep1 = Yup.object().shape({
@@ -90,6 +92,12 @@ const TaskForm = () => {
       const formatedDate = dayjs(values.due_date).format('YYYY-MM-DDTHH:mm:ss');
       values.due_date = formatedDate
 
+      const taskLocation = `${values.address},${values.city},${values.state},${values.country}`
+
+      const locationCoords = await getCoordinates(taskLocation)
+
+      values.location = locationCoords
+
       if (location.state) {
         const task_id = location.state.task_id
         const response = await taskService.updateTask(task_id, values, null)
@@ -97,8 +105,7 @@ const TaskForm = () => {
           setAlert({ show: true, status: 'success', description: 'Task updated successfully' });
 
         }
-      }
-      else {
+      } else {
         const response = await taskService.createTask(values)
         if (response) {
           setAlert({ show: true, status: 'success', description: 'Task created successfully' });

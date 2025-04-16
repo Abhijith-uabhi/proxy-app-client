@@ -55,3 +55,34 @@ export const getCitiesByCountryAndStateCode = async (countryCode, stateCode) => 
         throw error;
     }
 };
+
+
+export const getCoordinates = async (location) => {
+    try {
+        // Format the query for URL
+        const formattedLocation = encodeURIComponent(location);
+        console.log("the formatted location is", formattedLocation);
+
+
+        // Using Nominatim API (OpenStreetMap)
+        const response = await axios.get(
+            `https://nominatim.openstreetmap.org/search?q=${formattedLocation}&format=json&limit=1`,
+            {}
+        );
+
+        if (response.data && response.data.length > 0) {
+            const { lat, lon } = response.data[0];
+            return {
+                latitude: parseFloat(lat),
+                longitude: parseFloat(lon),
+                type: "Point"
+            };
+        } else {
+            throw new Error('Location not found');
+        }
+    } catch (error) {
+        console.error('Error fetching coordinates:', error);
+        throw error;
+    }
+}
+

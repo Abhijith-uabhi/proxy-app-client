@@ -18,6 +18,7 @@ import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
 import TaskRow from "components/Tables/TasksRow";
+import { LOCATION_COORDINATES } from "config/authConfig";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import taskService from "services/taksService";
@@ -28,7 +29,7 @@ const Tasks = ({ title, captions, listType }) => {
     const [tasks, setTasks] = useState([])
     const [alert, setAlert] = useState({ show: false, status: '', description: '' });
 
-
+    const locationCoOrdinates = localStorage.getItem(LOCATION_COORDINATES)
 
     useEffect(() => {
         if (listType)
@@ -42,7 +43,14 @@ const Tasks = ({ title, captions, listType }) => {
 
     const fetchTasks = async (type) => {
         try {
-            const response = await taskService.getall(type)
+            const params = {
+                type
+            }
+            if (locationCoOrdinates && type === "all_tasks") {
+                params.lat = JSON.parse(locationCoOrdinates).coordinates[0]
+                params.lng = JSON.parse(locationCoOrdinates).coordinates[1]
+            }
+            const response = await taskService.getall(params)
             // console.log("THE RESPONSE DATA",response.data);
             setTasks(response.data)
         } catch (error) {
