@@ -87,6 +87,14 @@ const TaskForm = () => {
     setStep(1);
   };
 
+  const getLocationCoordinates = async () => {
+    try {
+
+    } catch (error) {
+
+    }
+  }
+
   const handleSubmit = async (values) => {
     try {
       const formatedDate = dayjs(values.due_date).format('YYYY-MM-DDTHH:mm:ss');
@@ -120,7 +128,7 @@ const TaskForm = () => {
 
 
     } catch (error) {
-      setAlert({ show: true, status: 'error', description: 'Failed to create task' });
+      setAlert({ show: true, status: 'error', description: error.message || "Failed to create task" });
 
     }
 

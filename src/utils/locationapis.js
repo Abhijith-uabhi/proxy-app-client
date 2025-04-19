@@ -73,15 +73,14 @@ export const getCoordinates = async (location) => {
         if (response.data && response.data.length > 0) {
             const { lat, lon } = response.data[0];
             return {
-                latitude: parseFloat(lat),
-                longitude: parseFloat(lon),
+                coordinates: [parseFloat(lon), parseFloat(lat)],
                 type: "Point"
             };
         } else {
             throw new Error('Location not found');
         }
     } catch (error) {
-        console.error('Error fetching coordinates:', error);
+        console.error('Error fetching coordinates:', error.message);
         throw error;
     }
 }
