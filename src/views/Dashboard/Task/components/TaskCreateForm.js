@@ -58,7 +58,6 @@ const TaskForm = () => {
   useEffect(() => {
     if (location.state) {
       const dataforEdit = location.state.taskData
-      console.log("THE DATA FROM THE LOCATION IS", location.state.taskData);
       setInitialValues(dataforEdit)
       fethlocationsForEdit(dataforEdit)
     }
@@ -68,7 +67,7 @@ const TaskForm = () => {
   useEffect(() => {
     fetchCountries()
   }, [])
-  console.log("the initial values i s", initialValues);
+
 
   const fethlocationsForEdit = async (taskData) => {
     const stateData = await handleCountryChange(taskData.country)
@@ -87,13 +86,6 @@ const TaskForm = () => {
     setStep(1);
   };
 
-  const getLocationCoordinates = async () => {
-    try {
-
-    } catch (error) {
-
-    }
-  }
 
   const handleSubmit = async (values) => {
     try {
