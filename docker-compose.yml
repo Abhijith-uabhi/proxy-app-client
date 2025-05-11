@@ -7,7 +7,7 @@ services:
     ports: 
       - 3000:3000    # Map port 3000 on host to 3000 in container
     environment: 
-      - REACT_APP_API_URL=http://localhost:8000
+      - REACT_APP_API_URL=http://3.110.108.59:8000/    #http://localhost:8000
     volumes:
       - .:/app    # Mount current directory to /app in the container
       - /app/node_modules  # Keep node_modules in the container
